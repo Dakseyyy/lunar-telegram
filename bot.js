@@ -1,0 +1,40 @@
+require('dotenv').config();
+const express = require('express')
+const TelegramBot = require('node-telegram-bot-api');
+
+const token = process.env.BOT_TOKEN;
+const url = process.env.RENDER_EXTERNAL_URL || process.env.BOT_URL || null;
+const port = process.env.PORT || process.env.BOT_PORT;
+
+if (!url) {
+    console.error('No public URL for webhook is set');
+}
+
+
+const bot = new TelegramBot(token, { webHook: { port}})
+
+bot.setWebHook(`${url}/bot${token}`);
+
+const app = express();
+app.use(express.json())
+
+app.post(`/bot${token}`, (req, res) => {
+    bot.processUpdate(req.body);
+    res.sendStatus(200);
+})
+
+bot.on('message', (msg) => {
+    const chatId = msg.chat.id;
+    if (msg.text === '/ping') {
+        bot.sendMessage(chatId, 'pong');
+    }
+
+  });
+  
+  app.listen(port, () => {
+    console.log(`Bot running on port ${port} with webhook URL: ${url}/bot${token}`);
+  });
+
+  app.get('/ping', (req, res) => {
+    res.send('pong');
+  });
