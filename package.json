@@ -1,0 +1,17 @@
+{
+  "name": "lunar-bot",
+  "version": "1.0.0",
+  "description": "The best.",
+  "main": "bot.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "node-telegram-bot-api": "^0.66.0",
+    "nodemon": "^3.1.10"
+  }
+}
