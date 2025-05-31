@@ -4,19 +4,14 @@ const TelegramBot = require('node-telegram-bot-api');
 
 const token = process.env.BOT_TOKEN;
 const url = process.env.RENDER_EXTERNAL_URL || process.env.BOT_URL || null;
-const port = process.env.PORT;
-
-if (!port) {
-    console.error("PORT env variable is not set");
-    
-  }
+const port = process.env.PORT || process.env.BOT_PORT;
 
 if (!url) {
     console.error('No public URL for webhook is set');
 }
 
 
-const bot = new TelegramBot(token, { webHook: { port}})
+const bot = new TelegramBot(token)
 
 bot.setWebHook(`${url}/bot${token}`);
 
