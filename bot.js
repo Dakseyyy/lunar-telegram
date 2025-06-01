@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express')
 const TelegramBot = require('node-telegram-bot-api');
 
+const combiner = require('./src/commands/combiner/combiner')
 const token = process.env.BOT_TOKEN;
 const url = process.env.RENDER_EXTERNAL_URL || process.env.BOT_URL || null;
 const port = process.env.PORT || process.env.BOT_PORT;
@@ -11,7 +12,7 @@ if (!url) {
 }
 
 
-const bot = new TelegramBot(token)
+const bot = new TelegramBot(token, {polling: false})
 
 bot.setWebHook(`${url}/bot${token}`);
 
@@ -23,16 +24,10 @@ app.post(`/bot${token}`, (req, res) => {
     res.sendStatus(200);
 })
 
-bot.on('message', (msg) => {
-    const chatId = msg.chat.id;
-    if (msg.text === '/ping') {
-        bot.sendMessage(chatId, 'pong');
-    }
-
-  });
+combiner(bot)
   
   app.listen(port, () => {
-    console.log(`Bot running on port ${port} with webhook URL: ${url}/bot${token}`);
+    console.log(`Bot running on port ${port} with webhook URL: ${url}/bot$`);
   });
 
   app.get('/ping', (req, res) => {
