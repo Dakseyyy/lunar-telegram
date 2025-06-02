@@ -5,6 +5,9 @@ const combiner = (bot) => {
     if (msg.text === '/ping') {
         msgHandlers.pingCommand(bot, msg);
     }
+    if (msg.text === '/start') {
+        msgHandlers.startCommand(bot, msg)
+    }
 })
 }
 module.exports = combiner;

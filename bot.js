@@ -27,7 +27,7 @@ app.post(`/bot${token}`, (req, res) => {
 combiner(bot)
   
   app.listen(port, () => {
-    console.log(`Bot running on port ${port} with webhook URL: ${url}/bot$`);
+    console.log(`Bot running on port ${port} with webhook URL: ${url}/token`);
   });
 
   app.get('/ping', (req, res) => {
