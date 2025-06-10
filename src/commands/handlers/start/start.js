@@ -1,7 +1,7 @@
 const startCommand = (bot, msg) => {
     const chatId = msg.chat.id;
     const userId = msg.from.id
-    bot.sendMessage(chatId, `UserID: ${userId}`)
+    bot.sendMessage(chatId, `🌙 Welcome to Lunar Bot!`)
 }
 
 module.exports = startCommand;
