@@ -1,3 +1,4 @@
+const dbClient = require('../../../helper/dbConnect/dbClient');
 const startCommand = (bot, msg) => {
     const chatId = msg.chat.id;
     const userId = msg.from.id
