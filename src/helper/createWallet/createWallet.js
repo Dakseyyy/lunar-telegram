@@ -8,7 +8,7 @@ const env = {
   apiBaseUrl: "https://api.turnkey.com"                   // Turnkey's API endpoint
 };
 
- async function generateSolanaWallet(walletName) {
+ async function createWallet(walletName) {
   try {
     
 
@@ -109,7 +109,7 @@ async function example() {
   console.log('🚀 Starting Solana wallet generation example...\n');
 
   // Generate a new Solana wallet
-  const wallet = await generateSolanaWallet('test-solana-4');
+  const wallet = await createWallet('test-solana-4');
   
   if (wallet.success) {
     console.log('\n🎉 Wallet Details:');
@@ -124,7 +124,7 @@ async function example() {
 
 // Export functions for use in other files
 module.exports = {
-  generateSolanaWallet,
+  createWallet,
   listAllWallets
 };
 

@@ -1,10 +1,14 @@
-const {Client} = require('pg')
+const {Pool} = require('pg')
 require('dotenv').config({path: '../../../.env'})
-const client = new Client({
+const client = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
-    }
+    },
+    keepAlive: true,
+    idleTimeoutMillis: 30000, // optional: closes idle connections after 30s
+    connectionTimeoutMillis: 2000, // optional: wait max 2s when acquiring a connection
+    max: 10 // optional: max number of clients in pool
 })
 
 async function connectDb() {
@@ -17,6 +21,7 @@ async function connectDb() {
         console.error('DB connection error: ', err)
     }
 }
+
 
 connectDb();
 
