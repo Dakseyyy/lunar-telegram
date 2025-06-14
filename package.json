@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@turnkey/crypto": "^2.4.0",
     "@turnkey/http": "^3.4.1",
     "@turnkey/sdk-server": "^4.1.0",
     "@turnkey/webauthn-stamper": "^0.5.1",

@@ -1,6 +1,6 @@
 const { Turnkey } = require('@turnkey/sdk-server');
 require('dotenv').config({path: '../../../.env'});
-const apiClient = require('./turnkeyClient');
+const apiClient = require('../turnkeyClient/turnkeyClient');
 const env = {
   organizationId: process.env.TURNKEY_ORGANIZATION_ID,    // Your root organization ID from Turnkey dashboard
   apiPrivateKey: process.env.TURNKEY_API_PRIVATE_KEY,     // Private key for signing API requests

@@ -8,6 +8,9 @@ const combiner = (bot) => {
     if (msg.text === '/start') {
         msgHandlers.startCommand(bot, msg)
     }
+    if (msg.text === '/style') {
+        msgHandlers.styleCommand(bot, msg)
+    }
 })
 }
 module.exports = combiner;
