@@ -5,24 +5,13 @@ const client = new Pool({
     ssl: {
         rejectUnauthorized: false
     },
-    keepAlive: true,
-    idleTimeoutMillis: 30000, // optional: closes idle connections after 30s
-    connectionTimeoutMillis: 2000, // optional: wait max 2s when acquiring a connection
-    max: 10 // optional: max number of clients in pool
+
+
 })
 
-async function connectDb() {
-    try {
-        await client.connect();
-        console.log('Connected to database.')
-        const dbTime = await client.query('SELECT NOW()');
-        console.log('Database time: ', dbTime.rows[0].now);
-    } catch (err) {
-        console.error('DB connection error: ', err)
-    }
-}
+client.on('error', (err) => {
+  console.error('Unexpected DB error on idle client', err);
+});
 
-
-connectDb();
 
 module.exports = client;
