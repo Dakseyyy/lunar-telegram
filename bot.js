@@ -3,6 +3,7 @@ const express = require('express')
 const TelegramBot = require('node-telegram-bot-api');
 const handleCallbackQuery = require('./src/callbacks/handleCallbackQuery');
 const combiner = require('./src/commands/combiner/combiner')
+const fetchSolPrice = require('./src/helper/fetchSolPrice/fetchSolPrice')
 const token = process.env.BOT_TOKEN;
 const url = process.env.RENDER_EXTERNAL_URL || process.env.BOT_URL || null;
 const port = process.env.PORT || process.env.BOT_PORT;
