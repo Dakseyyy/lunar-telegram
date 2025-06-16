@@ -2,11 +2,11 @@ const dbClient = require('../../../helper/dbConnect/dbClient');
 
 const startCommand = async (bot, msg) => {
     
-    const client = await dbClient.connect()
+
     const chatId = msg.chat?.id || msg.message.chat.id;
     const userId = msg.from?.id || msg.message.from.id
     try {
-    let resolveUser = await client.query('SELECT wallet FROM user_wallets WHERE tg_user_id = $1', [userId])
+    let resolveUser = await dbClient.query('SELECT wallet FROM user_wallets WHERE tg_user_id = $1', [userId])
     resolveUser = resolveUser.rows[0];
     if (!resolveUser) {
         bot.sendMessage(chatId, `🌙 Welcome to Lunar!\n\nLooks like you are new around here! 👋\n\nTo get started, you'll need a wallet to store your tokens.`, {
@@ -21,10 +21,7 @@ const startCommand = async (bot, msg) => {
     }
     } catch (e) {
         console.error(e)
-    } finally {
-        client.release()
-    }
-    
+    } 
     
     
 }
