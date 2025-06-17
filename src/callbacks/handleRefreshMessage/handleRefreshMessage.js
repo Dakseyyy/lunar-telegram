@@ -5,7 +5,7 @@ const handleRefreshMessage = async (bot, callbackQuery, solPrice) => {
     const chatId = callbackQuery.message.chat.id;
     const messageId = callbackQuery.message.message_id;
     const userId = callbackQuery.from.id;
-    const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
 
      try {
 
@@ -13,15 +13,13 @@ const handleRefreshMessage = async (bot, callbackQuery, solPrice) => {
         
         userWallet = userWallet.rows[0].wallet;
         let userBalanceSOL = await fetchSolBal(userWallet)
+
         const userBalanceUSD = await fetchSolBal(userWallet) * solPrice
         let hasBalance = userBalanceSOL > 0;
 
         const {message, markup, plainMessage} = await genStartMessage(userWallet, userBalanceSOL, userBalanceUSD.toFixed(5), hasBalance)
         const currentMessage = callbackQuery.message.text;
-        console.log(currentMessage)
-        console.log('-----')
-        console.log(plainMessage)
-        console.log('------')
+
          const newMessagePlain = message.replace(/<[^>]*>/g, '');
         if (currentMessage !== plainMessage) {
             console.log('not the same')
