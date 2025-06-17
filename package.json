@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@solana/web3.js": "^1.98.2",
     "@turnkey/crypto": "^2.4.0",
     "@turnkey/http": "^3.4.1",
     "@turnkey/sdk-server": "^4.1.0",
