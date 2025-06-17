@@ -11,7 +11,7 @@ const startCommand = async (bot, msg, solPrice) => {
 
     let userWallet = await dbClient.query('SELECT wallet FROM user_wallets WHERE tg_user_id = $1', [userId])
 
-    if (!userWallet) {
+    if (!userWallet.rows[0]) {
         bot.sendMessage(chatId, `🌙 Welcome to Lunar!\n\nLooks like you are new around here! 👋\n\nTo get started, you'll need a wallet to store your tokens.`, {
             reply_markup: {
                 inline_keyboard: [
@@ -20,9 +20,10 @@ const startCommand = async (bot, msg, solPrice) => {
             }
         })
     } else if (userWallet) {
+            userWallet = userWallet.rows[0].wallet;
         
-        userWallet = userWallet.rows[0].wallet;
-        let userBalanceSOL = await fetchSolBal(userWallet)
+        let userBalanceSOL = await fetchSolBal(userWallet) || 0
+
         const userBalanceUSD = await fetchSolBal(userWallet) * solPrice
         let hasBalance = userBalanceSOL > 0;
 
