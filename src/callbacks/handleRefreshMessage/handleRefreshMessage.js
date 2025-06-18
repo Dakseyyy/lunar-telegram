@@ -1,6 +1,6 @@
 const fetchSolBal = require('../../helper/fetchSolBal/fetchSolBal')
 const dbClient = require('../../helper/dbConnect/dbClient')
-const genStartMessage = require('../../commands/handlers/start/walletMessage')
+const genStartMessage = require('../../commands/handlers/start/genStartMessage')
 const handleRefreshMessage = async (bot, callbackQuery, solPrice) => {
     const chatId = callbackQuery.message.chat.id;
     const messageId = callbackQuery.message.message_id;

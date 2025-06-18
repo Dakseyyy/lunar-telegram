@@ -2,7 +2,6 @@ let solPrice = null;
 let intervalId = null;
 const fetchSolPrice = async () => {
     try {
-        console.log('fetching...')
         const res = await fetch ('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd')
         const data = await res.json();
         solPrice = data.solana.usd

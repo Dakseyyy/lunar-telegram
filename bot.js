@@ -38,3 +38,4 @@ bot.on('callback_query', (callbackQuery) => { // initialize callbacks
   app.get('/ping', (req, res) => {
     res.send('pong');
   });
+
