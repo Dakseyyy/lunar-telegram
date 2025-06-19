@@ -1,6 +1,6 @@
 const { Connection, PublicKey, clusterApiUrl } = require('@solana/web3.js');
 require('dotenv').config({path: '../../../.env'});
-    const rpcURL = process.env.HELIUS_RPC_URL;
+    const rpcURL = process.env.ALCHEMY_RPC_URL;
     const connection = new Connection(rpcURL, 'confirmed');
 const fetchSolBal = async(walletAddress) => {
 

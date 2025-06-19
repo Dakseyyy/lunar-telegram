@@ -1,7 +1,8 @@
 const handleWalletCreation = require('./handleWalletCreation/handleWalletCreation')
 const handleDeleteMessage = require('./handleMessageDelete/handleMessageDelete');
-const startCommand = require('../commands/handlers/start/start');
+const startCommand = require('../commands/handlers/start/startCommand');
 const handleRefreshMessage = require('./handleRefreshMessage/handleRefreshMessage')
+const settingsCommand = require('../commands/handlers/settings/settingsCommand')
 const { solPriceFetcher, getSolPrice} = require('../helper/fetchSolPrice/fetchSolPrice')
 solPriceFetcher()
 
@@ -19,7 +20,15 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
     }
 
     if (data === 'refresh') {
-        await handleRefreshMessage(bot, callbackQuery, getSolPrice())
+        await startCommand(bot, callbackQuery, getSolPrice())
+        bot.answerCallbackQuery(callbackQuery.id)
+    }
+    if (data === 'settings') {
+        await settingsCommand(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'back') {
+        await startCommand(bot, callbackQuery, getSolPrice());
         bot.answerCallbackQuery(callbackQuery.id)
     }
 }

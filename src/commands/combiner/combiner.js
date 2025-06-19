@@ -13,6 +13,9 @@ const combiner = (bot) => {
     if (msg.text === '/style') {
         msgHandlers.styleCommand(bot, msg)
     }
+    if (msg.text === '/settings') {
+        msgHandlers.settingsCommand(bot, msg)
+    }
 })
 }
 module.exports = combiner;
