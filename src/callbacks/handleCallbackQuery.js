@@ -4,6 +4,7 @@ const startCommand = require('../commands/handlers/start/startCommand');
 const handleRefreshMessage = require('./handleRefreshMessage/handleRefreshMessage')
 const settingsCommand = require('../commands/handlers/settings/settingsCommand')
 const { solPriceFetcher, getSolPrice} = require('../helper/fetchSolPrice/fetchSolPrice')
+const handleFeesCommand = require('../callbacks/handleFeesCommand/handleFeesCommand')
 solPriceFetcher()
 
 const handleCallbackQuery = async (bot, callbackQuery) => {
@@ -27,9 +28,25 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         await settingsCommand(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     }
-    if (data === 'back') {
+    if (data === 'back_to_start') {
         await startCommand(bot, callbackQuery, getSolPrice());
         bot.answerCallbackQuery(callbackQuery.id)
+    }
+    if (data === 'fees') {
+        await handleFeesCommand(bot, callbackQuery)
+        bot.answerCallbackQuery(callbackQuery.id)
+    }
+    if (data === 'back_to_settings') {
+        await settingsCommand(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'turbo') {
+        await handleFeesCommand(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'fast') {
+        await handleFeesCommand(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
     }
 }
 

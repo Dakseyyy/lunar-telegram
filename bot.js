@@ -27,7 +27,12 @@ app.post(`/bot${token}`, (req, res) => {
 
 combiner(bot) // combine commands
   
-
+bot.setMyCommands([
+  { command: '/start', description: 'Start the bot' },
+  { command: '/settings', description: 'Configure bot settings' }
+], {
+  scope: { type: 'default' }  // global default for all users
+});
 bot.on('callback_query', (callbackQuery) => { // initialize callbacks
   handleCallbackQuery(bot, callbackQuery)
 })

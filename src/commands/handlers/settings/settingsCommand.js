@@ -26,21 +26,7 @@ const settingsCommand = async (bot, msg) => {
         
         
         
-        
-        /*const userId = msg.from?.id || msg.message.from.id
-        const chatId = msg.chat?.id || msg.message.chat.id;
-        let userSettings = await dbClient.query('SELECT slippage, priority_fee, bribe_fee, mev_protect FROM user_txn_settings WHERE tg_user_id = $1', [userId])
-        console.log(userSettings.rows)
-        if (!userSettings.rows[0]) {
-            const createDefaultSettings = await dbClient.query('INSERT INTO user_txn_settings (tg_user_id, priority_fee, bribe_fee, mev_protect) VALUES ($1, $2, $3, $4)', [userId, 0.001, 0.001, false])
-            userSettings = await dbClient.query('SELECT slippage, priority_fee, bribe_fee, mev_protect FROM user_txn_settings WHERE tg_user_id = $1', [userId])
-            const {slippage, priority_fee, bribe_fee, mev_protect} = userSettings.rows[0]
-            bot.sendMessage(chatId, `temp`)
-        } else {
-            const {slippage, priority_fee, bribe_fee, mev_protect} = userSettings.rows[0]
-            bot.sendMessage(chatId, `temp`)
-        }
-            */
+
     } catch (e) {
         console.error(e)
     }

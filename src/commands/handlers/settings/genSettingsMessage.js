@@ -22,7 +22,7 @@ const genSettingsMessage = (slippage, priority_fee, bribe_fee, mev_protect) => {
                 {text: `🔐 Account Security 🔴`, callback_data: `account_security`},
             ],
             [
-                {text: `⟵ Back`, callback_data: `back`}
+                {text: `⟵ Back`, callback_data: `back_to_start`}
             ],
             
         ]
