@@ -4,7 +4,7 @@ const genFeesMessage = (slippage, buy_priority_fee, buy_bribe_fee, sell_priority
     const checkPreset = (feeLabel, key) => {
         return fee_preset === key ? `${feeLabel} ✅` : feeLabel;
     }
-    
+
     const markup = {
         inline_keyboard: [
             [
@@ -13,7 +13,7 @@ const genFeesMessage = (slippage, buy_priority_fee, buy_bribe_fee, sell_priority
                 {text: checkPreset(`Custom`, 'custom'), callback_data: `custom`}
             ],
             [
-                {text: `${mev_protect ? `🛡 MEV Protect 🟢` : `🛡 MEV Protect 🔴`}`, callback_data: `mev_protect`},
+                {text: `${mev_protect ? `🛡 MEV Protect 🔴` : `🛡 MEV Protect 🟢`}`, callback_data: `mev_protect`},
                 {text: `Slippage: ${slippage}%`, callback_data: 'slippage'}
             ],
             [

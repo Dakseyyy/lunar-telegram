@@ -48,6 +48,10 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         await handleFeesCommand(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     }
+    if (data === 'mev_protect'){
+        await handleFeesCommand(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
 }
 
 module.exports = handleCallbackQuery;
