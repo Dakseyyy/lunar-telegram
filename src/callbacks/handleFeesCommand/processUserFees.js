@@ -1,6 +1,6 @@
 const userSettingsCache = new Map();
 const dbClient = require('../../helper/dbConnect/dbClient')
-const updateUserSettings = async (userId, query, bot) => {
+const updateUserSettings = async (userId, query, input) => {
     let settings;
     if (userSettingsCache.has(userId)) {
        settings = userSettingsCache.get(userId)
@@ -61,6 +61,41 @@ const updateUserSettings = async (userId, query, bot) => {
 
             return updatedFeeSettings.rows[0]
         
+    }
+    if (query === 'slippage') {
+
+        let updatedFeeSettings = await dbClient.query('UPDATE user_txn_settings SET slippage = $1, fee_preset = $2 WHERE tg_user_id = $3 RETURNING slippage, buy_priority_fee, buy_bribe_fee, sell_priority_fee, sell_bribe_fee, mev_protect, fee_preset', [input, 'custom', userId])
+            userSettingsCache.set(userId, updatedFeeSettings.rows[0])
+
+            return updatedFeeSettings.rows[0]
+    }
+        if (query === 'buy_priority_fee') {
+
+        let updatedFeeSettings = await dbClient.query('UPDATE user_txn_settings SET buy_priority_fee = $1, fee_preset = $2 WHERE tg_user_id = $3 RETURNING slippage, buy_priority_fee, buy_bribe_fee, sell_priority_fee, sell_bribe_fee, mev_protect, fee_preset', [input, 'custom', userId])
+            userSettingsCache.set(userId, updatedFeeSettings.rows[0])
+
+            return updatedFeeSettings.rows[0]
+    }
+    if (query === 'sell_priority_fee') {
+
+        let updatedFeeSettings = await dbClient.query('UPDATE user_txn_settings SET sell_priority_fee = $1, fee_preset = $2 WHERE tg_user_id = $3 RETURNING slippage, buy_priority_fee, buy_bribe_fee, sell_priority_fee, sell_bribe_fee, mev_protect, fee_preset', [input, 'custom', userId])
+            userSettingsCache.set(userId, updatedFeeSettings.rows[0])
+
+            return updatedFeeSettings.rows[0]
+    }
+    if (query === 'buy_bribe_fee') {
+
+        let updatedFeeSettings = await dbClient.query('UPDATE user_txn_settings SET buy_bribe_fee = $1, fee_preset = $2 WHERE tg_user_id = $3 RETURNING slippage, buy_priority_fee, buy_bribe_fee, sell_priority_fee, sell_bribe_fee, mev_protect, fee_preset', [input, 'custom', userId])
+            userSettingsCache.set(userId, updatedFeeSettings.rows[0])
+
+            return updatedFeeSettings.rows[0]
+    }
+    if (query === 'sell_bribe_fee') {
+
+        let updatedFeeSettings = await dbClient.query('UPDATE user_txn_settings SET sell_bribe_fee = $1, fee_preset = $2 WHERE tg_user_id = $3 RETURNING slippage, buy_priority_fee, buy_bribe_fee, sell_priority_fee, sell_bribe_fee, mev_protect, fee_preset', [input, 'custom', userId])
+            userSettingsCache.set(userId, updatedFeeSettings.rows[0])
+
+            return updatedFeeSettings.rows[0]
     }
 }
 

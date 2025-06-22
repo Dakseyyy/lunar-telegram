@@ -5,6 +5,7 @@ const handleRefreshMessage = require('./handleRefreshMessage/handleRefreshMessag
 const settingsCommand = require('../commands/handlers/settings/settingsCommand')
 const { solPriceFetcher, getSolPrice} = require('../helper/fetchSolPrice/fetchSolPrice')
 const handleFeesCommand = require('../callbacks/handleFeesCommand/handleFeesCommand')
+const handleCustomFees = require('../callbacks/handleCustomFees/handleCustomFees')
 solPriceFetcher()
 
 const handleCallbackQuery = async (bot, callbackQuery) => {
@@ -50,6 +51,30 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
     }
     if (data === 'mev_protect'){
         await handleFeesCommand(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    } if (data === 'slippage') {
+        await handleCustomFees(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'buy_priority_fee') {
+        await handleCustomFees(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'sell_priority_fee') {
+        await handleCustomFees(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'buy_bribe_fee') {
+        await handleCustomFees(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'sell_bribe_fee') {
+        await handleCustomFees(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'back_to_fees'){
+        await handleCustomFees(bot, callbackQuery)
+         await handleFeesCommand(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     }
 }
