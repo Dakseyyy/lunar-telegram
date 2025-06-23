@@ -1,25 +1,15 @@
-const genSettingsMessage = (slippage, priority_fee, bribe_fee, mev_protect) => {
-    const message = `🌙<b>Lunar Settings</b>\n\n🔐Account Security: Enable a 24-hour cooldown when withdrawing to a new or unrecognized wallet. This helps protect your funds if your Telegram account is ever compromised.\n\n⛽ Fees: Customize the fees you pay per transaction. Higher fees prioritize your transaction, resulting in faster processing times.\n\n⚙ Autobuy: Automatically purchase a fixed amount whenever you paste a contract address into the chat.`
-    const markup = {
+const genSettingsMessage = (withdraw_protection, autobuy, context) => {
+    const settingsMessage = `🌙<b>Lunar Settings</b>\n\n🔐Withdraw Protection: Enable a 24-hour cooldown when withdrawing to a new or unrecognized wallet. This helps protect your funds if your Telegram account is ever compromised.\n\n⛽ Fees: Customize the fees you pay per transaction. Higher fees prioritize your transaction, resulting in faster processing times.\n\n⚙ Autobuy: Automatically purchase a fixed amount whenever you paste a contract address into the chat.`
+    const settingsMarkup = {
         inline_keyboard: [
-            /*[
-                {text: `🏎 Fast`, callback_data: `fast`},
-                {text: `⚡ Turbo`, callback_data: `turbo`},
-                {text: `Custom`, callback_data: `custom`}
-                
-            ],
-            [
-                {text: `🛡 MEV Protect`, callback_data: `mev_protect`},
-                {text: `Autobuy`, callback_data: `autobuy`}
-            ],
-            */
+
             [
                 {text: '⛽ Fees', callback_data: 'fees'},
-                {text: '⚙ Autobuy', callback_data: 'autobuy'},
+                {text: `⚙ Autobuy ${autobuy ? '🟢' : '🔴'}`, callback_data: 'autobuy'},
                 
             ],
             [
-                {text: `🔐 Account Security 🔴`, callback_data: `account_security`},
+                {text: `🔐 Account Security ${withdraw_protection ? '🟢' : '🔴'}`, callback_data: `withdraw_protection`},
             ],
             [
                 {text: `⟵ Back`, callback_data: `back_to_start`}
@@ -27,7 +17,22 @@ const genSettingsMessage = (slippage, priority_fee, bribe_fee, mev_protect) => {
             
         ]
     }
-    return {message, markup}
+
+    const withdraw_protection_message = `🌙 <b>Withdraw Protection</b>\n\n🔐 Withdraw protection has been <b>${withdraw_protection ? 'enabled.' : 'disabled.'}</b>\n\n💡 ${withdraw_protection ? `Turning it off will take 24 hours, and you'll be notified every 6 hours during the cooldown.` : `Withdraw protection is still on, changes will take effect after a 24-hour cooldown. We'll remind you every 6 hours until it's fully disabled.`}`;
+    const withdraw_protection_markup = {
+        inline_keyboard: [
+            [
+                {text: `🗑 Close`, callback_data: `silent_delete_message`}
+            ],
+            
+        ]
+    }
+    if (context === 'settings') {
+        return {message: settingsMessage, markup: settingsMarkup}
+    } else if (context ==='withdraw_protection') {
+        return {withdraw_context_message: withdraw_protection_message, withdraw_context_markup: withdraw_protection_markup}
+    }
+    
 }
 
 module.exports = genSettingsMessage;

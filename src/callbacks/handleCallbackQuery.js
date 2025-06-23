@@ -20,6 +20,9 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         await handleDeleteMessage(chatId, messageId, bot)
         await startCommand(bot, callbackQuery)
     }
+    if (data === 'silent_delete_message'){
+        await handleDeleteMessage(chatId, messageId, bot)
+    }
 
     if (data === 'refresh') {
         await startCommand(bot, callbackQuery, getSolPrice())
@@ -75,6 +78,10 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
     if (data === 'back_to_fees'){
         await handleCustomFees(bot, callbackQuery)
          await handleFeesCommand(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'withdraw_protection'){
+        await settingsCommand(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     }
 }
