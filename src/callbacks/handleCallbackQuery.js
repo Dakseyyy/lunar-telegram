@@ -2,7 +2,8 @@ const handleWalletCreation = require('./handleWalletCreation/handleWalletCreatio
 const handleDeleteMessage = require('./handleMessageDelete/handleMessageDelete');
 const startCommand = require('../commands/handlers/start/startCommand');
 const handleRefreshMessage = require('./handleRefreshMessage/handleRefreshMessage')
-const settingsCommand = require('../commands/handlers/settings/settingsCommand')
+const {handleAutobuy} = require('./handleAutobuy/handleAutobuy')
+const {settingsCommand} = require('../commands/handlers/settings/settingsCommand')
 const { solPriceFetcher, getSolPrice} = require('../helper/fetchSolPrice/fetchSolPrice')
 const handleFeesCommand = require('../callbacks/handleFeesCommand/handleFeesCommand')
 const handleCustomFees = require('../callbacks/handleCustomFees/handleCustomFees')
@@ -44,6 +45,11 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         await settingsCommand(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     }
+    if (data === 'back_to_settings_from_autobuy') {
+        await settingsCommand(bot, callbackQuery);
+        await handleAutobuy(bot, callbackQuery)
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
     if (data === 'turbo') {
         await handleFeesCommand(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
@@ -83,6 +89,10 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
     if (data === 'withdraw_protection'){
         await settingsCommand(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'autobuy'){
+        await handleAutobuy(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id)
     }
 }
 
