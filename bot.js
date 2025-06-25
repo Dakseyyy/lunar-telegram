@@ -4,6 +4,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const handleCallbackQuery = require('./src/callbacks/handleCallbackQuery');
 const combiner = require('./src/commands/combiner/combiner')
 
+const listeners = require('./src/listeners/listeners')
+
 const token = process.env.BOT_TOKEN;
 const url = process.env.RENDER_EXTERNAL_URL || process.env.BOT_URL || null;
 const port = process.env.PORT || process.env.BOT_PORT;
@@ -26,7 +28,9 @@ app.post(`/bot${token}`, (req, res) => {
 })
 
 combiner(bot) // combine commands
-  
+listeners(bot); // activate  listeners
+
+
 bot.setMyCommands([
   { command: '/start', description: 'Start the bot' },
   { command: '/settings', description: 'Configure bot settings' }
@@ -36,6 +40,7 @@ bot.setMyCommands([
 bot.on('callback_query', (callbackQuery) => { // initialize callbacks
   handleCallbackQuery(bot, callbackQuery)
 })
+
   app.listen(port, () => {
     console.log(`Bot running on port ${port} with webhook URL: ${url}/token`);
   });

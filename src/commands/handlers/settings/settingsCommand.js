@@ -1,6 +1,7 @@
 const dbClient = require('../../../helper/dbConnect/dbClient');
 const genSettingsMessage = require('./genSettingsMessage');
 const userAccountSettingsCache = new Map()
+
 const settingsCommand = async (bot, msg, type) => {
     try {
         const userId = msg.from?.id || msg.message.from.id
@@ -61,7 +62,7 @@ const settingsCommand = async (bot, msg, type) => {
             disable_web_page_preview: true,
             reply_markup: withdraw_context_markup
             })
-            } else if (wpPending === false) { // if user is trying to turn off wp protection, previously was already on
+            } else if (wpPending === false && withdraw_protection === true) { // if user is trying to turn off wp protection, previously was already on
             const updateUserAccountSettings = await dbClient.query('UPDATE user_account_settings SET wp_pending_disable = $1 WHERE tg_user_id = $2 RETURNING withdraw_protection, autobuy, wp_pending_disable', [true, userId]);
             const {wp_pending_message, wp_pending_markup} = genSettingsMessage(false, userAccountSettingsCache.get(userId)?.autobuy, 'wp_pending_disable', true)
             userAccountSettingsCache.set(userId, updateUserAccountSettings.rows[0])
@@ -71,7 +72,7 @@ const settingsCommand = async (bot, msg, type) => {
                 chat_id: chatId,
                 message_id: msg.message.message_id,
 
-            });
+            }) 
             // toggleWithdrawProtection();
 
             bot.sendMessage(chatId, wp_pending_message, {
@@ -79,6 +80,25 @@ const settingsCommand = async (bot, msg, type) => {
             disable_web_page_preview: true,
             reply_markup: wp_pending_markup
         })
+            }else if (wpPending === false && withdraw_protection === false) {
+                console.log('EDITINGGGG')
+                 const updateUserAccountSettings = await dbClient.query('UPDATE user_account_settings SET withdraw_protection = $1 WHERE tg_user_id = $2 RETURNING withdraw_protection, autobuy, wp_pending_disable', [true, userId]);
+            const {wp_pending_message, wp_pending_markup} = genSettingsMessage(true, userAccountSettingsCache.get(userId)?.autobuy, 'withdraw_protection', false)
+            userAccountSettingsCache.set(userId, updateUserAccountSettings.rows[0])
+            const {withdraw_protection, autobuy} = userAccountSettingsCache.get(userId)
+            const { markup } = genSettingsMessage(true, autobuy, 'settings', false);
+                bot.editMessageReplyMarkup(markup, {
+                chat_id: chatId,
+                message_id: msg.message.message_id,
+
+            })
+
+            const {withdraw_context_message, withdraw_context_markup} = genSettingsMessage(true, userAccountSettingsCache.get(userId)?.autobuy, 'withdraw_protection', false)
+            bot.sendMessage(chatId, withdraw_context_message, {
+            parse_mode: 'HTML',
+            disable_web_page_preview: true,
+            reply_markup: withdraw_context_markup
+            })
             }
             
         }

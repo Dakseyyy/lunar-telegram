@@ -1,14 +1,19 @@
 const isValidCA = require('./isValidCA')
-const autobuy = (bot, callbackQuery) => {
-    return async function autobuyHandler(msg) {
-    const chatId = callbackQuery.message.chat.id;
-    const userId = callbackQuery.from.id
-    const messageId = callbackQuery.message.message_id;
+const autobuy = async (bot, msg) => {
+
+    try {
+        console.log('called!')
+    const chatId = msg.chat.id
+    const userId = msg.from.id
+
     if (isValidCA(msg.text)) {
-        bot.sendMessage(chatId, 'buying...')
+        await bot.sendMessage(chatId, 'buying...')
     } else {
+        console.log('invalid')
         return;
     }
+    } catch (e) {
+        console.error(e)
     }
 }
 

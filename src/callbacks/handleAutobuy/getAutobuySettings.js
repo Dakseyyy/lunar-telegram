@@ -1,5 +1,6 @@
 const dbClient = require('../../helper/dbConnect/dbClient')
 const userAutobuySetting = new Map();
+
 const getAutobuySettings = async(userId) => {
     try {
         if (userAutobuySetting.has(userId)) { // check if user is already in memory

@@ -1,4 +1,5 @@
 const genSettingsMessage = (withdraw_protection, autobuy, context, pending_withdraw) => {
+    console.log(pending_withdraw)
     const settingsMessage = `🌙<b>Lunar Settings</b>\n\n🔐Withdraw Protection: Enable a 24-hour cooldown when withdrawing to a new or unrecognized wallet. This helps protect your funds if your Telegram account is ever compromised.\n\n⛽ Fees: Customize the fees you pay per transaction. Higher fees prioritize your transaction, resulting in faster processing times.\n\n⚙ Autobuy: Automatically purchase a fixed amount whenever you paste a contract address into the chat.`
     const settingsMarkup = {
         inline_keyboard: [
