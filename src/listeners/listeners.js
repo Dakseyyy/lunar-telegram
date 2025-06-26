@@ -10,11 +10,10 @@ const listeners = (bot) => {
         const chatId = msg.chat.id;
         const state = await userStates.get(chatId)?.state;
         await fetchAutobuyState(msg.from.id);
-        console.log(isUserBusy.has(msg.from.id))
-        console.log(autobuyStates.get(msg.from.id))
+
 
         if (state === 'sell_priority_fee') {
-            console.log('processing input...')
+
             handleInput.feeInput(bot, msg, 'sell_priority_fee')
         }
         if (state === 'buy_priority_fee') {
@@ -31,11 +30,11 @@ const listeners = (bot) => {
             handleInput.feeInput(bot, msg, 'slippage')
         }
         if (state === 'autobuy'){
-            console.log('entered input block')
+
             handleInput.autobuyInput(bot, msg)
         }
         if (autobuyStates.get(msg.from.id) === true && isUserBusy.has(msg.from.id) === false) {
-            console.log('user is autobuying')
+
             handleInput.purchaseCA(bot, msg)
         }
     })

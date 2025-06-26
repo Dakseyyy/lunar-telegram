@@ -8,7 +8,7 @@ const settingsCommand = async (bot, msg, type) => {
         const chatId = msg.chat?.id || msg.message.chat.id;
         let userAccountSettings = null;
         if (userAccountSettingsCache.has(userId)){
-            console.log('User has account settings data in cache.')
+
             userAccountSettings = userAccountSettingsCache.get(userId)
             
             
@@ -28,7 +28,7 @@ const settingsCommand = async (bot, msg, type) => {
         const {withdraw_protection, autobuy, wp_pending_disable} = userAccountSettings
         const {message, markup} = genSettingsMessage(withdraw_protection, autobuy, 'settings', wp_pending_disable);
         if (msg.message && msg.data !== 'withdraw_protection') {
-            console.log('trying to edit...')
+
             bot.editMessageText(message, {
                 chat_id: chatId,
                 message_id: msg.message.message_id,
@@ -46,7 +46,7 @@ const settingsCommand = async (bot, msg, type) => {
         if (msg.data === 'withdraw_protection') {
 
             const wpPending = userAccountSettingsCache.get(userId)?.wp_pending_disable
-            console.log(`wpPending: ${wpPending}`)
+
             if (wpPending === true) { // if user had previously been trying to turn off withdraw protection
                 const updateUserAccountSettings = await dbClient.query('UPDATE user_account_settings SET withdraw_protection = $1, wp_pending_disable = $2 WHERE tg_user_id = $3 RETURNING withdraw_protection, autobuy, wp_pending_disable', [true, false, userId]);
                 userAccountSettingsCache.set(userId, updateUserAccountSettings.rows[0])
@@ -81,7 +81,7 @@ const settingsCommand = async (bot, msg, type) => {
             reply_markup: wp_pending_markup
         })
             }else if (wpPending === false && withdraw_protection === false) {
-                console.log('EDITINGGGG')
+
                  const updateUserAccountSettings = await dbClient.query('UPDATE user_account_settings SET withdraw_protection = $1 WHERE tg_user_id = $2 RETURNING withdraw_protection, autobuy, wp_pending_disable', [true, userId]);
             const {wp_pending_message, wp_pending_markup} = genSettingsMessage(true, userAccountSettingsCache.get(userId)?.autobuy, 'withdraw_protection', false)
             userAccountSettingsCache.set(userId, updateUserAccountSettings.rows[0])
