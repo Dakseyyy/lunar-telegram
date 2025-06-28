@@ -4,20 +4,17 @@ const { solPriceFetcher, getSolPrice} = require('../../helper/fetchSolPrice/fetc
 const isUserBusy = require('../../memory/isUserBusy/isUserBusy')
 solPriceFetcher()
 const combiner = (bot) => {
-    try {
+    
     bot.on('message', (msg) => {
-        if (isUserBusy.has(msg.from.id) === true) {
-
+        try {
+        if (isUserBusy.has(msg.from.id) === true || typeof msg.text !== 'string') {
             return;
         }
     if (msg.text === '/ping') {
         msgHandlers.pingCommand(bot, msg);
     }
-    if (msg.text === '/start' || msg.text.startsWith('/start ')) {
-        const isReferrer = msg.text.match(/^\/start(?:\s+(.+))?/);
-        if (isReferrer) {
-            console.log(`Referred by ${isReferrer[1]}`)
-        }
+    if (msg.text.startsWith('/start')) {
+
         msgHandlers.startCommand(bot, msg, getSolPrice())
     }
     if (msg.text === '/style') {
@@ -26,10 +23,15 @@ const combiner = (bot) => {
     if (msg.text === '/settings') {
         msgHandlers.settingsCommand(bot, msg)
     }
-})
+    if (msg.text === '/referrals') {
+        msgHandlers.referralCommand(bot, msg);
+    }
+
     } catch (e) {
         console.error(e)
     }
+})
+    
     
 }
 module.exports = combiner;
