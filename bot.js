@@ -33,7 +33,8 @@ listeners(bot); // activate  listeners
 
 bot.setMyCommands([
   { command: '/start', description: 'Start the bot' },
-  { command: '/settings', description: 'Configure bot settings' }
+  { command: '/settings', description: 'Configure bot settings' },
+  { command: '/referrals', description: 'See the referral dashboard'}
 ], {
   scope: { type: 'default' }  // global default for all users
 });

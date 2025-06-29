@@ -18,7 +18,7 @@ const getWallet = async (userId) => {
         }
     }
     } catch (e) {
-
+        console.error(e)
     }
 }
 

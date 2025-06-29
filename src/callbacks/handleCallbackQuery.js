@@ -7,6 +7,7 @@ const {settingsCommand} = require('../commands/handlers/settings/settingsCommand
 const { solPriceFetcher, getSolPrice} = require('../helper/fetchSolPrice/fetchSolPrice')
 const handleFeesCommand = require('../callbacks/handleFeesCommand/handleFeesCommand')
 const handleCustomFees = require('../callbacks/handleCustomFees/handleCustomFees')
+const referralCommand = require('../commands/handlers/referrals/referralsCommand')
 solPriceFetcher()
 
 const handleCallbackQuery = async (bot, callbackQuery) => {
@@ -19,10 +20,14 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
     }
     if (data === 'delete_message') {
         await handleDeleteMessage(chatId, messageId, bot)
-        await startCommand(bot, callbackQuery)
+        await startCommand(bot, callbackQuery, getSolPrice())
     }
     if (data === 'silent_delete_message'){
         await handleDeleteMessage(chatId, messageId, bot)
+    }
+    if (data === 'silent_delete_message_and_go_start') {
+        await handleDeleteMessage(chatId, messageId, bot)
+        await startCommand(bot, callbackQuery, getSolPrice(), 'send')
     }
 
     if (data === 'refresh') {
@@ -93,6 +98,10 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
     if (data === 'autobuy'){
         await handleAutobuy(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id)
+    }
+    if (data === 'referrals') {
+        await referralCommand(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
     }
 }
 
