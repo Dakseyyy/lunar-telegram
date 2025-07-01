@@ -10,7 +10,7 @@ const startCommand = async (bot, msg, solPrice, context) => {
         const userWallet = await getWallet(userId)
 
         if (/^\/start\s+.+/.test(msg.text)) {
-            processReferral(bot, msg)
+            await processReferral(bot, msg)
         }
 
 
