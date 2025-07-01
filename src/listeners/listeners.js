@@ -3,12 +3,13 @@ const handleInput = require('./handleInput')
 const isUserBusy = require('../memory/isUserBusy/isUserBusy')
 const autobuyStates = require('../memory/autobuyStates/autobuyStates')
 const fetchAutobuyState = require('../helper/autobuy/fetchAutobuyState');
+
 const listeners = (bot) => {
 
     bot.on('message', async (msg) => {
         
         const chatId = msg.chat.id;
-        const state = await userStates.get(chatId)?.state;
+        const state = await userStates.get(chatId)?.state || await userStates.get(chatId);
         await fetchAutobuyState(msg.from.id);
 
 
@@ -36,6 +37,9 @@ const listeners = (bot) => {
         if (autobuyStates.get(msg.from.id) === true && isUserBusy.has(msg.from.id) === false) {
 
             handleInput.purchaseCA(bot, msg)
+        }
+        if (state === 'update_referral_code'){
+            handleInput.handleReferralCodeInput(bot, msg)
         }
     })
 }

@@ -13,9 +13,11 @@ const startCommand = async (bot, msg, solPrice, context) => {
             await processReferral(bot, msg)
         }
 
-
+        
     if (userWallet.hasWallet === false) {
-        const {message, markup} = genStartMessage(null, null, null, null, 'new_user')
+        
+        const {message, markup} = await genStartMessage(null, null, null, null, 'new_user')
+        console.log(message)
         bot.sendMessage(chatId, message, {
             reply_markup: markup
         });

@@ -1,13 +1,17 @@
 const genReferralsMessage = require('./genReferralsMessage')
 const getReferralProfile = require('./ReferralProfile/getReferralProfile')
 const createReferralProfile = require('./ReferralProfile/createReferralProfile')
+const userStates = require('../../../memory/userStates/userStates');
+const isUserBusy = require('../../../memory/isUserBusy/isUserBusy')
 const referralCommand = async (bot, msg) => {
     try {
         const chatId = msg.chat?.id || msg.message.chat.id;
         const userId = msg.from?.id || msg.message.from.id;
         const username = msg.from.username || msg.from.id;
+       
+        console.log(msg.data)
         let referralProfile = await getReferralProfile(userId);
-
+        
         if (!referralProfile.hasReferralProfile) {
             referralProfile = await createReferralProfile(userId, username)
 
