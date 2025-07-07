@@ -9,6 +9,7 @@ const handleFeesCommand = require('../callbacks/handleFeesCommand/handleFeesComm
 const handleCustomFees = require('../callbacks/handleCustomFees/handleCustomFees')
 const referralCommand = require('../commands/handlers/referrals/referralsCommand')
 const updateReferralCode = require('../commands/handlers/referrals/updateReferralCode/updateReferralCode')
+const positionsCommand = require('../commands/handlers/positions/positionsCommand')
 solPriceFetcher()
 
 const handleCallbackQuery = async (bot, callbackQuery) => {
@@ -111,6 +112,10 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
     }
     if (data === 'cancel_update_referral_code') {
         await updateReferralCode(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'positions') {
+        await positionsCommand(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     }
 }

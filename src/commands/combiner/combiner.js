@@ -26,7 +26,9 @@ const combiner = (bot) => {
     if (msg.text === '/referrals') {
         msgHandlers.referralCommand(bot, msg);
     }
-
+    if (msg.text === '/positions') {
+        msgHandlers.positionsCommand(bot, msg)
+    }
     } catch (e) {
         console.error(e)
     }
