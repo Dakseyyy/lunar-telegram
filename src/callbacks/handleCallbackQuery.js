@@ -10,6 +10,7 @@ const handleCustomFees = require('../callbacks/handleCustomFees/handleCustomFees
 const referralCommand = require('../commands/handlers/referrals/referralsCommand')
 const updateReferralCode = require('../commands/handlers/referrals/updateReferralCode/updateReferralCode')
 const positionsCommand = require('../commands/handlers/positions/positionsCommand')
+const handleCopytrade = require('../callbacks/handleCopytrade/handleCopytrade')
 solPriceFetcher()
 
 const handleCallbackQuery = async (bot, callbackQuery) => {
@@ -116,6 +117,14 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
     }
     if (data === 'positions') {
         await positionsCommand(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'copytrade') {
+        await handleCopytrade(bot, callbackQuery)
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data.startsWith('show_profile_')) {
+        await handleCopytrade(bot, callbackQuery, callbackQuery.data);
         bot.answerCallbackQuery(callbackQuery.id);
     }
 }

@@ -16,7 +16,7 @@ const genStartMessage = async(userWallet, userBalanceSOL, userBalanceUSD, hasBal
                 {text: 'Limit Orders', callback_data: 'limit_orders'}
             ],
             [
-                {text: 'Copy Trade', callback_data: 'copy_trade'},
+                {text: 'Copy Trade', callback_data: 'copytrade'},
                 {text: '💰 Referrals', callback_data: 'referrals'},
                 
             ],
