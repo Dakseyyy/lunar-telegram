@@ -11,6 +11,7 @@ const referralCommand = require('../commands/handlers/referrals/referralsCommand
 const updateReferralCode = require('../commands/handlers/referrals/updateReferralCode/updateReferralCode')
 const positionsCommand = require('../commands/handlers/positions/positionsCommand')
 const handleCopytrade = require('../callbacks/handleCopytrade/handleCopytrade')
+const updateCopytradeSettings = require('../callbacks/handleCopytrade/updateCopytradeSettings');
 solPriceFetcher()
 
 const handleCallbackQuery = async (bot, callbackQuery) => {
@@ -125,6 +126,14 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
     }
     if (data.startsWith('show_profile_')) {
         await handleCopytrade(bot, callbackQuery, callbackQuery.data);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data.startsWith('change_buy_prio_' || 'change_sell_prio_' || 'change_buy_bribe_' || 'change_sell_bribe' || 'change_slippage_' || 'change_active_')) {
+        await updateCopytradeSettings(bot, callbackQuery, callbackQuery.data);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'back_to_copytrade') {
+        await handleCopytrade(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     }
 }
