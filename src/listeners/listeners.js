@@ -8,8 +8,10 @@ const listeners = (bot) => {
 
     bot.on('message', async (msg) => {
         
+
         const chatId = msg.chat.id;
         const state = await userStates.get(chatId)?.state || await userStates.get(chatId);
+        console.log('🚨 Incoming message with state:', state, 'msg:', msg.text);
         await fetchAutobuyState(msg.from.id);
 
 
@@ -27,7 +29,7 @@ const listeners = (bot) => {
         if (state === 'sell_bribe_fee') {
             handleInput.feeInput(bot, msg, 'sell_bribe_fee')
         }
-        if (state === 'slippage') {
+        if (state === 'slippage' && userStates.get(chatId)?.intent !== 'copytrades') {
             handleInput.feeInput(bot, msg, 'slippage')
         }
         if (state === 'autobuy'){
@@ -40,6 +42,10 @@ const listeners = (bot) => {
         }
         if (state === 'update_referral_code'){
             handleInput.handleReferralCodeInput(bot, msg)
+        }
+        if (state === 'priority_fee_buy' || state === 'priority_fee_sell' || state === 'bribe_fee_buys' || state === 'bribe_fee_sells' || state === 'slippage' || state === 'copytrade_wallet' || state === 'buy_amount' || state === 'toggle_active') {
+            console.log('called capture!!!!')
+            handleInput.captureCopytradeInput(bot, msg, state)
         }
     })
 }

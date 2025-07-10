@@ -12,9 +12,12 @@ const updateReferralCode = require('../commands/handlers/referrals/updateReferra
 const positionsCommand = require('../commands/handlers/positions/positionsCommand')
 const handleCopytrade = require('../callbacks/handleCopytrade/handleCopytrade')
 const updateCopytradeSettings = require('../callbacks/handleCopytrade/updateCopytradeSettings');
+const deleteCopytradeProfile = require('./handleCopytrade/deleteCopytradeProfile');
+const createNewCopytradingProfile = require('./handleCopytrade/createNewCopytradingProfile');
 solPriceFetcher()
 
 const handleCallbackQuery = async (bot, callbackQuery) => {
+    console.log(callbackQuery.data)
     const chatId = callbackQuery.message.chat.id;
     const messageId = callbackQuery.message.message_id;
     const userId = callbackQuery.from.id;
@@ -128,12 +131,23 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         await handleCopytrade(bot, callbackQuery, callbackQuery.data);
         bot.answerCallbackQuery(callbackQuery.id);
     }
-    if (data.startsWith('change_buy_prio_' || 'change_sell_prio_' || 'change_buy_bribe_' || 'change_sell_bribe' || 'change_slippage_' || 'change_active_')) {
+    if (data.startsWith('change_buy_prio_') ||data.startsWith('change_sell_prio_') ||data.startsWith('change_buy_bribe_') ||data.startsWith('change_sell_bribe_') ||data.startsWith('change_slippage_') ||data.startsWith('change_wallet_') || data.startsWith('change_buy_amount_') || data.startsWith('toggle_active_')) {
         await updateCopytradeSettings(bot, callbackQuery, callbackQuery.data);
         bot.answerCallbackQuery(callbackQuery.id);
     }
     if (data === 'back_to_copytrade') {
         await handleCopytrade(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'new_copytrade_profile') {
+        await handleCopytrade(bot, callbackQuery, 'new_copytrade_profile_')
+    }
+    if (data.startsWith('delete_copytrade_profile_')) {
+        await deleteCopytradeProfile(bot, callbackQuery)
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'new_copytrade_profile') {
+        await createNewCopytradingProfile(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     }
 }
