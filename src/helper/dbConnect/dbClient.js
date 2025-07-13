@@ -1,16 +1,13 @@
-const {Pool} = require('pg')
+const {Pool, Client} = require('pg')
 require('dotenv').config({path: '../../../.env'})
-const client = new Pool({
-    connectionString: process.env.DATABASE_URL,
+const client = new Client({
+    connectionString: process.env.DATABASE_URL + '?sslmode=require',
     ssl: {
         rejectUnauthorized: false
     },
-    // Connection pool settings
-    max: 10, // Maximum number of clients in the pool
-    idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-    connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
-    maxUses: 7500, // Close (and replace) a connection after it has been used 7500 times
-    allowExitOnIdle: true // Allow the pool to close all connections and exit when there are no active connections
+    keepAlive: true,
+    keepAliveInitialDelayMillis: 0,
+    connectionTimeoutMillis: 2000
 
 })
 
@@ -24,5 +21,9 @@ client.on('connect', () => {
 
 client.on('remove', () => {
     console.log('Database connection removed from pool');
+});
+
+client.connect().catch(err => {
+    console.error('Failed to connect:', err);
 });
 module.exports = client;
