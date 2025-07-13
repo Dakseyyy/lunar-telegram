@@ -2,6 +2,7 @@ const dbClient = require('../../helper/dbConnect/dbClient');
 const userState = require('../../memory/userStates/userStates');
 const genCopyTradeMessage = require('./genCopytradeMessage');
 const handleCopytrade = require('./handleCopytrade');
+const isUserBusy = require('../../memory/isUserBusy/isUserBusy')
 const allowed_columns = ['priority_fee_buy', 'priority_fee_sell', 'bribe_fee_buys', 'bribe_fee_sells', 'slippage', 'buy_amount', 'copytrade_wallet', 'active'];
 
 const processCopytradeInput = async (bot, msg, state, profileId, msgToEdit) => {
@@ -16,6 +17,8 @@ const processCopytradeInput = async (bot, msg, state, profileId, msgToEdit) => {
             const profile = await dbClient.query('SELECT * FROM copytrade_profiles WHERE profile_id = $1', [profileId]);
             if (Object.values(profile.rows[0]).every(value => value !== null)) {
                 const updatedProfile = await dbClient.query('UPDATE copytrade_profiles SET active = $1 WHERE profile_id = $2 RETURNING *', [!profile.rows[0].active, profileId]);
+                userState.delete(chatId);
+                isUserBusy.delete(userId);
                 const {copytrade_message, copytrade_markup} = genCopyTradeMessage('show_profile', null, updatedProfile.rows[0]);
                 console.log(copytrade_markup.reply_markup)
                   bot.editMessageReplyMarkup(copytrade_markup.reply_markup, {
@@ -30,6 +33,8 @@ const processCopytradeInput = async (bot, msg, state, profileId, msgToEdit) => {
         if (allowed_columns.includes(state)) {
             const updatedProfile = await dbClient.query(`UPDATE copytrade_profiles SET ${state} = $1 WHERE profile_id = $2 RETURNING *`, [msg.text, profileId])
             bot.deleteMessage(chatId, userState.get(chatId)?.messageToDelete);
+                        userState.delete(chatId);
+                isUserBusy.delete(userId);
             const {copytrade_message, copytrade_markup} = genCopyTradeMessage('show_profile', null, updatedProfile.rows[0])
             bot.sendMessage(chatId, copytrade_message, copytrade_markup)
         } else {
