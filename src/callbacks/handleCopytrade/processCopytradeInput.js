@@ -1,7 +1,7 @@
 const dbClient = require('../../helper/dbConnect/dbClient');
 const userState = require('../../memory/userStates/userStates');
 const genCopyTradeMessage = require('./genCopytradeMessage');
-const handleCopytrade = require('./handleCopyTrade');
+const handleCopytrade = require('./handleCopytrade');
 const allowed_columns = ['priority_fee_buy', 'priority_fee_sell', 'bribe_fee_buys', 'bribe_fee_sells', 'slippage', 'buy_amount', 'copytrade_wallet', 'active'];
 
 const processCopytradeInput = async (bot, msg, state, profileId, msgToEdit) => {
