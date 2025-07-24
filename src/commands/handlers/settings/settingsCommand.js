@@ -1,6 +1,9 @@
 const dbClient = require('../../../helper/dbConnect/dbClient');
+const scheduleTimer = require('../../../helper/withdrawProtection/scheduleTimer');
+const toggleWithdrawProtection = require('../../../helper/withdrawProtection/toggleWithdrawProtection');
+const userAccountSettingsCache = require('../../../memory/userAccountSettingsCache/userAccountSettingsCache');
 const genSettingsMessage = require('./genSettingsMessage');
-const userAccountSettingsCache = new Map()
+
 
 const settingsCommand = async (bot, msg, type) => {
     try {
@@ -47,7 +50,7 @@ const settingsCommand = async (bot, msg, type) => {
 
             const wpPending = userAccountSettingsCache.get(userId)?.wp_pending_disable
 
-            if (wpPending === true) { // if user had previously been trying to turn off withdraw protection
+            if (wpPending === true) { // user wants to cancel the process of turning off withdraw protection
                 const updateUserAccountSettings = await dbClient.query('UPDATE user_account_settings SET withdraw_protection = $1, wp_pending_disable = $2 WHERE tg_user_id = $3 RETURNING withdraw_protection, autobuy, wp_pending_disable', [true, false, userId]);
                 userAccountSettingsCache.set(userId, updateUserAccountSettings.rows[0])
                 const {message, markup} = genSettingsMessage(true, userAccountSettingsCache.get(userId)?.autobuy, 'settings', false)
@@ -56,13 +59,16 @@ const settingsCommand = async (bot, msg, type) => {
                 message_id: msg.message.message_id,
 
             });
+            await dbClient.query('DELETE FROM pending_timers WHERE tg_user_id = $1', [userId]);
+            toggleWithdrawProtection('cancel', bot, userId, chatId)
             const {withdraw_context_message, withdraw_context_markup} = genSettingsMessage(true, userAccountSettingsCache.get(userId)?.autobuy, 'withdraw_protection', false)
             bot.sendMessage(chatId, withdraw_context_message, {
             parse_mode: 'HTML',
             disable_web_page_preview: true,
             reply_markup: withdraw_context_markup
             })
-            } else if (wpPending === false && withdraw_protection === true) { // if user is trying to turn off wp protection, previously was already on
+
+            } else if (wpPending === false && withdraw_protection === true) { // user wants to turn off withdraw protection (currently turned on)
             const updateUserAccountSettings = await dbClient.query('UPDATE user_account_settings SET wp_pending_disable = $1 WHERE tg_user_id = $2 RETURNING withdraw_protection, autobuy, wp_pending_disable', [true, userId]);
             const {wp_pending_message, wp_pending_markup} = genSettingsMessage(false, userAccountSettingsCache.get(userId)?.autobuy, 'wp_pending_disable', true)
             userAccountSettingsCache.set(userId, updateUserAccountSettings.rows[0])
@@ -72,7 +78,10 @@ const settingsCommand = async (bot, msg, type) => {
                 chat_id: chatId,
                 message_id: msg.message.message_id,
 
-            }) 
+            })
+            const timestamp24hAhead = new Date(Date.now() + 24 * 60 * 60 * 1000)
+            await dbClient.query('INSERT INTO pending_timers (tg_user_id, expires_at, chat_id) VALUES ($1, $2, $3)', [userId, timestamp24hAhead, chatId]);
+            toggleWithdrawProtection('new_timer', bot, userId, chatId, timestamp24hAhead);
             // toggleWithdrawProtection();
 
             bot.sendMessage(chatId, wp_pending_message, {

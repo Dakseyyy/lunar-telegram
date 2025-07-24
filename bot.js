@@ -4,7 +4,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const handleCallbackQuery = require('./src/callbacks/handleCallbackQuery');
 const combiner = require('./src/commands/combiner/combiner')
 
-const listeners = require('./src/listeners/listeners')
+const listeners = require('./src/listeners/listeners');
+const toggleWithdrawProtection = require('./src/helper/withdrawProtection/toggleWithdrawProtection');
 
 const token = process.env.BOT_TOKEN;
 const url = process.env.RENDER_EXTERNAL_URL || process.env.BOT_URL || null;
@@ -30,6 +31,7 @@ app.post(`/bot${token}`, (req, res) => {
 combiner(bot) // combine commands
 listeners(bot); // activate  listeners
 
+toggleWithdrawProtection('initialize', bot)
 
 bot.setMyCommands([
   { command: '/start', description: 'Start the bot' },
