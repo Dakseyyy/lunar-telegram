@@ -18,7 +18,7 @@ const toggleWithdrawProtection = async (intent, bot, userId, chatId, expiresAt) 
     } else if (intent === 'new_timer') {
         scheduleTimer(userId, chatId, bot, expiresAt)
     } else if (intent === 'cancel') {
-         bot.sendMessage(chatId, 'Cancelling...');
+
 
         scheduleTimer(userId, 'x', 'x', 'x', 'cancel')
        
