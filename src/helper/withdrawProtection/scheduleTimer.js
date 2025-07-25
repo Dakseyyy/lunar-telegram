@@ -1,17 +1,19 @@
 const timers = new Map();
 const userAccountSettingsCache = require('../../memory/userAccountSettingsCache/userAccountSettingsCache');
 const dbClient = require('../dbConnect/dbClient');
-const formatDuration = require('./formatDuration')
-const scheduleTimer = (userId, chatId, bot, expiresAt, intent) => {
+const formatDuration = require('./formatDuration');
+const scheduleAlerts = require('./scheduleAlert')
+const scheduleTimer = (userId, chatId, bot, expiresAt, intent, nextAlert) => {
     try {
     
     const id = userId;
-    console.log(timers.get(id))
+
+
     if (intent === 'cancel') {
         const existing = timers.get(id);
         console.log(existing)
         clearTimeout(existing.timeout);
-        clearInterval(existing.interval);
+        clearTimeout(existing.alertTimeout);
         timers.delete(id);
         return;
     }
@@ -25,17 +27,8 @@ const scheduleTimer = (userId, chatId, bot, expiresAt, intent) => {
         return;
     }
     
-     const interval = setInterval(() => {
-    const timeLeft = expiryDate - Date.now();
-    if (timeLeft <= 0) {
-
-        clearTimeout(existing.timeout);
-        clearInterval(existing.interval);
-      return;
-    }
-    bot.sendMessage(chatId, `🔔 You have ${formatDuration(timeLeft)} hours left before withdraw protection is disabled.`)
-    }, 6 * 60 * 60 * 1000);
-
+     
+    const alertTimeout = scheduleAlerts({ timers, userId: id, chatId, bot, expiryDate, nextAlert, dbClient });
 
     const timeout = setTimeout(async () => {
         const existing = timers.get(id);
@@ -47,12 +40,12 @@ const scheduleTimer = (userId, chatId, bot, expiresAt, intent) => {
         
         dbClient.query('DELETE FROM pending_timers WHERE tg_user_id = $1', [id]);
         clearTimeout(existing.timeout);
-        clearInterval(existing.interval);
+        clearTimeout(existing.alertTimeout);
         timers.delete(id);
 
     }, remaining);
 
-    timers.set(id, { interval: interval, timeout: timeout });
+    timers.set(id, { timeout, alertTimeout });
     } catch (e) {
         console.error(e)
     }

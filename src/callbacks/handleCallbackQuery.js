@@ -14,10 +14,11 @@ const handleCopytrade = require('../callbacks/handleCopytrade/handleCopytrade')
 const updateCopytradeSettings = require('../callbacks/handleCopytrade/updateCopytradeSettings');
 const deleteCopytradeProfile = require('./handleCopytrade/deleteCopytradeProfile');
 const createNewCopytradingProfile = require('./handleCopytrade/createNewCopytradingProfile');
+const handleWithdraw = require('./handleWithdraw/handleWithdraw');
 solPriceFetcher()
 
 const handleCallbackQuery = async (bot, callbackQuery) => {
-    console.log(callbackQuery.data)
+
     const chatId = callbackQuery.message.chat.id;
     const messageId = callbackQuery.message.message_id;
     const userId = callbackQuery.from.id;
@@ -149,6 +150,10 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
     if (data === 'new_copytrade_profile') {
         await createNewCopytradingProfile(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'withdraw') {
+        await handleWithdraw(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id)
     }
 }
 

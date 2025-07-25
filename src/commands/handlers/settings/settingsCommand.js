@@ -79,9 +79,12 @@ const settingsCommand = async (bot, msg, type) => {
                 message_id: msg.message.message_id,
 
             })
-            const timestamp24hAhead = new Date(Date.now() + 24 * 60 * 60 * 1000)
-            await dbClient.query('INSERT INTO pending_timers (tg_user_id, expires_at, chat_id) VALUES ($1, $2, $3)', [userId, timestamp24hAhead, chatId]);
-            toggleWithdrawProtection('new_timer', bot, userId, chatId, timestamp24hAhead);
+            const timestamp24hAhead = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+
+            const nextAlert = new Date(Date.now() + 6 * 60 * 60 * 1000);
+            await dbClient.query('INSERT INTO pending_timers (tg_user_id, expires_at, chat_id, next_alert) VALUES ($1, $2, $3, $4)', [userId, timestamp24hAhead, chatId, nextAlert]);
+            toggleWithdrawProtection('new_timer', bot, userId, chatId, timestamp24hAhead, nextAlert);
             // toggleWithdrawProtection();
 
             bot.sendMessage(chatId, wp_pending_message, {
