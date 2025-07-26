@@ -152,7 +152,19 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         bot.answerCallbackQuery(callbackQuery.id);
     }
     if (data === 'withdraw') {
-        await handleWithdraw(bot, callbackQuery);
+        await handleWithdraw(bot, callbackQuery, getSolPrice());
+        bot.answerCallbackQuery(callbackQuery.id)
+    }
+    if (data === 'withdraw_100%') {
+        await handleWithdraw(bot, callbackQuery, 'withdraw_100%', getSolPrice());
+        bot.answerCallbackQuery(callbackQuery.id)
+    }
+    if (data === 'withdraw_custom_sol') {
+        await handleWithdraw(bot, callbackQuery, 'withdraw_custom_sol', getSolPrice());
+        bot.answerCallbackQuery(callbackQuery.id)
+    }
+    if (data === 'withdraw_address') {
+        await handleWithdraw(bot, callbackQuery, 'set_withdrawal_address', getSolPrice());
         bot.answerCallbackQuery(callbackQuery.id)
     }
 }

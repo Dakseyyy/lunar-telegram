@@ -44,8 +44,14 @@ const listeners = (bot) => {
             handleInput.handleReferralCodeInput(bot, msg)
         }
         if (state === 'priority_fee_buy' || state === 'priority_fee_sell' || state === 'bribe_fee_buys' || state === 'bribe_fee_sells' || state === 'slippage' || state === 'copytrade_wallet' || state === 'buy_amount' || state === 'toggle_active') {
-            console.log('called capture!!!!')
+
             handleInput.captureCopytradeInput(bot, msg, state)
+        }
+        if (state === 'withdraw_solana_amount') {
+            handleInput.captureInput(bot, msg)
+        }
+        if (state === 'choose_wallet') {
+            handleInput.captureWalletInput(bot, msg)
         }
     })
 }
