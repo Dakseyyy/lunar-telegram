@@ -1,7 +1,6 @@
 const { Connection, PublicKey, clusterApiUrl } = require('@solana/web3.js');
-require('dotenv').config({path: '../../../.env'});
-    const rpcURL = process.env.LUNAR_RPC_URL;
-    const connection = new Connection(rpcURL, 'confirmed');
+
+const rpc = require('../../clients/rpcClient')
 const fetchSolBal = async(walletAddress) => {
 
     const publicKey = new PublicKey(walletAddress)
@@ -9,7 +8,7 @@ const fetchSolBal = async(walletAddress) => {
         return 0;
     }
     try {
-        const balanceLamports = await connection.getBalance(publicKey);
+        const balanceLamports = await rpc.getBalance(publicKey);
         let balanceSOL = balanceLamports / 1e9;
 
         return balanceSOL

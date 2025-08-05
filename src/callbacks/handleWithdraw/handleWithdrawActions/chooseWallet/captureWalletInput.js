@@ -7,7 +7,8 @@ const captureWalletInput = async (bot, msg) => {
    try {
      const chatId = msg.chat.id
     const userId = msg.from.id
-    const userWallet = (await dbClient.query('SELECT wallet FROM user_wallets WHERE tg_user_id = $1', [userId])).rows[0];
+    const userWallet = (await dbClient.query('SELECT wallet FROM user_wallets WHERE tg_user_id = $1', [userId])).rows[0].wallet;
+
     const messageId = userStates.get(chatId)?.toDelete;
     if (checkWalletFormat(msg.text)) {
         const newSettings = (await dbClient.query('UPDATE withdraw_settings SET withdrawal_address = $1 WHERE tg_user_id = $2 RETURNING *', [msg.text, userId])).rows[0];

@@ -6,6 +6,7 @@ const chooseSolana = require("./handleWithdrawActions/chooseSolana/chooseSolana"
 const isUserBusy = require("../../memory/isUserBusy/isUserBusy");
 const userStates = require("../../memory/userStates/userStates");
 const chooseWallet = require("./handleWithdrawActions/chooseWallet/chooseWallet");
+const chooseWithdraw = require("./handleWithdrawActions/chooseWithdraw");
 const handleWithdraw = async (bot, callbackquery, context, solPrice) => {
     try {
                    
@@ -28,6 +29,10 @@ const handleWithdraw = async (bot, callbackquery, context, solPrice) => {
             }
             if (context === 'set_withdrawal_address') {
                 chooseWallet({userId, chatId, messageId, bot, solPrice, userWallet});
+                return;
+            }
+            if (context === 'withdraw') {
+                chooseWithdraw({userId, chatId, messageId, bot});
                 return;
             }
 

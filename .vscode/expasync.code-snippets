@@ -1,0 +1,26 @@
+{
+	"Exported async function": {
+  "prefix": "expasync",
+  "body": [
+    "module.exports = async function ${1:functionName}(${2:args}) {",
+    "\t$0",
+    "};"
+  ],
+  "description": "Export an async function"
+},
+"Exported async function with try/catch": {
+  "prefix": "exptry",
+  "body": [
+    "async function ${1:functionName}(${2:args}) {",
+    "\ttry {",
+    "\t\t$0",
+    "\t} catch (e) {",
+    "\t\tconsole.error(e);",
+    "\t}",
+    "}",
+    "",
+  ],
+  "description": "Define a named async function with try/catch and export it"
+}
+
+}

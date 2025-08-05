@@ -19,6 +19,12 @@ const captureInput = async (bot, msg) => {
             })
             return;
         }
+        if (parseFloat(msg.text) <= 0.001) {
+            await bot.sendMessage(chatId, `⚠️ Minimum withdraw amount is 0.001 SOL`, {
+                reply_markup: {inline_keyboard : [[{text: '⟵ Back', callback_data: 'withdraw'}]]}
+            })
+            return;
+        }
         const newSettings = (await dbClient.query('UPDATE withdraw_settings SET sol_amount = $1, withdraw_choice = $2 WHERE tg_user_id = $3 RETURNING *', [parseFloat(msg.text), 'solana', userId])).rows[0];
         await bot.deleteMessage(chatId, messageId);
         const {default_withdraw_message, default_withdraw_markup} = await genWithdrawMessage('default', newSettings, userWallet);

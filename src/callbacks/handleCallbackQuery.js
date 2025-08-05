@@ -15,6 +15,8 @@ const updateCopytradeSettings = require('../callbacks/handleCopytrade/updateCopy
 const deleteCopytradeProfile = require('./handleCopytrade/deleteCopytradeProfile');
 const createNewCopytradingProfile = require('./handleCopytrade/createNewCopytradingProfile');
 const handleWithdraw = require('./handleWithdraw/handleWithdraw');
+const handleScheduledWithdraws = require('./handleScheduledWithdraws/handleScheduledWithdraws');
+const cancelWithdraw = require('./handleScheduledWithdraws/cancelWithdraw');
 solPriceFetcher()
 
 const handleCallbackQuery = async (bot, callbackQuery) => {
@@ -166,6 +168,18 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
     if (data === 'withdraw_address') {
         await handleWithdraw(bot, callbackQuery, 'set_withdrawal_address', getSolPrice());
         bot.answerCallbackQuery(callbackQuery.id)
+    }
+    if (data === 'try_withdraw') {
+        await handleWithdraw(bot, callbackQuery, 'withdraw');
+        bot.answerCallbackQuery(callbackQuery.id)
+    }
+    if (data === 'view_scheduled_withdraws') {
+        await handleScheduledWithdraws(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id)
+    }
+    if (data.startsWith('cancel_withdraw_')) {
+        cancelWithdraw(bot, callbackQuery)
+        bot.answerCallbackQuery(callbackQuery.id);
     }
 }
 

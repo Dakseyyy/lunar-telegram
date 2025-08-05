@@ -1,10 +1,10 @@
 const {Pool, Client} = require('pg')
-require('dotenv').config({path: '../../../.env'})
+require('dotenv').config({path: '../../../.env'});
+const fs = require('fs');
+console.log(process.env.DATABASE_URL)
 const client = new Client({
-    connectionString: process.env.DATABASE_URL + '?sslmode=require',
-    ssl: {
-        rejectUnauthorized: false
-    },
+    connectionString: process.env.DATABASE_URL,
+   
     keepAlive: true,
     keepAliveInitialDelayMillis: 0,
     connectionTimeoutMillis: 2000
@@ -12,7 +12,7 @@ const client = new Client({
 })
 
 client.on('error', (err) => {
-  console.error('Database shut down');
+  console.error(err);
 });
 
 client.on('connect', () => {

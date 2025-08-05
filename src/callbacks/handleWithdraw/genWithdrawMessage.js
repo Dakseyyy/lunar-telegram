@@ -9,7 +9,7 @@ const genWithdrawMessage = async (context, data, userWallet) => {
 
                 let solPrice = currentSolPrice.get('currentSOLPrice')
                 const userBalanceSOL = await fetchSolBal(userWallet);
-
+                console.log(userWallet)
                 const userBalanceUSD = (userBalanceSOL * solPrice).toFixed(5)
         const default_withdraw_message = `🌙 <b>Withdraw</b>\n\n💰 Balance: ${userBalanceSOL} SOL ($${userBalanceUSD})  \n\n💡 Always double‑check the withdrawal address before confirming a withdrawal.`
         const default_withdraw_markup = {
@@ -20,7 +20,7 @@ const genWithdrawMessage = async (context, data, userWallet) => {
                     [{text: `100% ${data.withdraw_choice === null ? '' : data.withdraw_choice === 'percent' ? '✅' : ''}`, callback_data: 'withdraw_100%'}, {text: `${data.sol_amount === null ? 'x' : data.sol_amount} SOL ${data.withdraw_choice === null ? '' : data.withdraw_choice === 'solana' ? '✅' : ''}`, callback_data: 'withdraw_custom_sol'}],
                     [{text: `💸 Withdrawal Address: ${data.withdrawal_address === null ? '───' : shortenAddress(data.withdrawal_address)}`, callback_data: 'withdraw_address'}],
                     [{text: '✅ Withdraw', callback_data: 'try_withdraw'}],
-                    [{text: '⟵ Back', callback_data: 'back_to_start'}]
+                    [{text: '⟵ Back', callback_data: 'back_to_start'}, {text: 'View Scheduled', callback_data: 'view_scheduled_withdraws'}]
                 ]
             }
         }
