@@ -1,8 +1,7 @@
 const {Pool, Client} = require('pg')
 require('dotenv').config({path: '../../../.env'});
 const fs = require('fs');
-console.log(process.env.DATABASE_URL)
-const client = new Client({
+const dbClient = new Client({
     connectionString: process.env.DATABASE_URL,
    
     keepAlive: true,
@@ -11,19 +10,19 @@ const client = new Client({
 
 })
 
-client.on('error', (err) => {
+dbClient.on('error', (err) => {
   console.error(err);
 });
 
-client.on('connect', () => {
+dbClient.on('connect', () => {
     console.log('Database connected');
 });
 
-client.on('remove', () => {
+dbClient.on('remove', () => {
     console.log('Database connection removed from pool');
 });
 
-client.connect().catch(err => {
+dbClient.connect().catch(err => {
     console.error('Failed to connect:', err);
 });
-module.exports = client;
+module.exports = dbClient;

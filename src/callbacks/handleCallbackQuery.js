@@ -2,9 +2,9 @@ const handleWalletCreation = require('./handleWalletCreation/handleWalletCreatio
 const handleDeleteMessage = require('./handleMessageDelete/handleMessageDelete');
 const startCommand = require('../commands/handlers/start/startCommand');
 const handleRefreshMessage = require('./handleRefreshMessage/handleRefreshMessage')
-const {handleAutobuy} = require('./handleAutobuy/handleAutobuy')
-const {settingsCommand} = require('../commands/handlers/settings/settingsCommand')
-const { solPriceFetcher, getSolPrice} = require('../helper/fetchSolPrice/fetchSolPrice')
+const { handleAutobuy } = require('./handleAutobuy/handleAutobuy')
+const { settingsCommand } = require('../commands/handlers/settings/settingsCommand')
+const { solPriceFetcher, getSolPrice } = require('../helper/fetchSolPrice/fetchSolPrice')
 const handleFeesCommand = require('../callbacks/handleFeesCommand/handleFeesCommand')
 const handleCustomFees = require('../callbacks/handleCustomFees/handleCustomFees')
 const referralCommand = require('../commands/handlers/referrals/referralsCommand')
@@ -17,6 +17,8 @@ const createNewCopytradingProfile = require('./handleCopytrade/createNewCopytrad
 const handleWithdraw = require('./handleWithdraw/handleWithdraw');
 const handleScheduledWithdraws = require('./handleScheduledWithdraws/handleScheduledWithdraws');
 const cancelWithdraw = require('./handleScheduledWithdraws/cancelWithdraw');
+const handleBuy = require('./handleBuy/handleBuy');
+const handleSell = require('./handleSell/handleSell');
 solPriceFetcher()
 
 const handleCallbackQuery = async (bot, callbackQuery) => {
@@ -32,7 +34,7 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         await handleDeleteMessage(chatId, messageId, bot)
         await startCommand(bot, callbackQuery, getSolPrice(), 'send')
     }
-    if (data === 'silent_delete_message'){
+    if (data === 'silent_delete_message') {
         await handleDeleteMessage(chatId, messageId, bot)
     }
     if (data === 'silent_delete_message_and_go_start') {
@@ -73,7 +75,7 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         await handleFeesCommand(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     }
-    if (data === 'mev_protect'){
+    if (data === 'mev_protect') {
         await handleFeesCommand(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     } if (data === 'slippage') {
@@ -96,16 +98,16 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         await handleCustomFees(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     }
-    if (data === 'back_to_fees'){
+    if (data === 'back_to_fees') {
         await handleCustomFees(bot, callbackQuery)
-         await handleFeesCommand(bot, callbackQuery);
+        await handleFeesCommand(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     }
-    if (data === 'withdraw_protection'){
+    if (data === 'withdraw_protection') {
         await settingsCommand(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id);
     }
-    if (data === 'autobuy'){
+    if (data === 'autobuy') {
         await handleAutobuy(bot, callbackQuery);
         bot.answerCallbackQuery(callbackQuery.id)
     }
@@ -134,7 +136,7 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         await handleCopytrade(bot, callbackQuery, callbackQuery.data);
         bot.answerCallbackQuery(callbackQuery.id);
     }
-    if (data.startsWith('change_buy_prio_') ||data.startsWith('change_sell_prio_') ||data.startsWith('change_buy_bribe_') ||data.startsWith('change_sell_bribe_') ||data.startsWith('change_slippage_') ||data.startsWith('change_wallet_') || data.startsWith('change_buy_amount_') || data.startsWith('toggle_active_')) {
+    if (data.startsWith('change_buy_prio_') || data.startsWith('change_sell_prio_') || data.startsWith('change_buy_bribe_') || data.startsWith('change_sell_bribe_') || data.startsWith('change_slippage_') || data.startsWith('change_wallet_') || data.startsWith('change_buy_amount_') || data.startsWith('toggle_active_')) {
         await updateCopytradeSettings(bot, callbackQuery, callbackQuery.data);
         bot.answerCallbackQuery(callbackQuery.id);
     }
@@ -181,6 +183,55 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         cancelWithdraw(bot, callbackQuery)
         bot.answerCallbackQuery(callbackQuery.id);
     }
+    if (data === 'buy') {
+        handleBuy(bot, callbackQuery, 'default');
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'set_contract_address') {
+        handleBuy(bot, callbackQuery, 'set_contract_address');
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'set_custom_sol') {
+        handleBuy(bot, callbackQuery, 'set_custom_sol');
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'edit_buy_options') {
+        handleBuy(bot, callbackQuery, 'edit_buy_options');
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data.startsWith('edit_buy_option_')) {
+        handleBuy(bot, callbackQuery, callbackQuery.data);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data.startsWith('buy_option_')) {
+        handleBuy(bot, callbackQuery, callbackQuery.data);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'sell') {
+        handleSell(bot, callbackQuery, 'default');
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'set_contract_address_sell') {
+        handleSell(bot, callbackQuery, 'set_contract_address_sell');
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'set_custom_percent') {
+        handleSell(bot, callbackQuery, 'set_custom_percent');
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data === 'edit_sell_options') {
+        handleSell(bot, callbackQuery, 'edit_sell_options');
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data.startsWith('edit_sell_option_')) {
+        handleSell(bot, callbackQuery, callbackQuery.data);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data.startsWith('sell_option_')) {
+        handleSell(bot, callbackQuery, callbackQuery.data);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    
 }
 
 module.exports = handleCallbackQuery;

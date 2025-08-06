@@ -6,6 +6,8 @@ const captureCopytradeInput = require('../callbacks/handleCopytrade/captureCopyt
 const captureInput = require('../callbacks/handleWithdraw/handleWithdrawActions/chooseSolana/captureInput');
 const chooseWallet = require('../callbacks/handleWithdraw/handleWithdrawActions/chooseWallet/chooseWallet');
 const captureWalletInput = require('../callbacks/handleWithdraw/handleWithdrawActions/chooseWallet/captureWalletInput');
+const captureBuySettingsInput = require('../callbacks/handleBuy/inputs/processInput');
+const captureSellSettingsInput = require('../callbacks/handleSell/inputs/processInputSells');
 const handleInput = {
     feeInput,
     autobuyInput,
@@ -13,7 +15,9 @@ const handleInput = {
     handleReferralCodeInput,
     captureCopytradeInput,
     captureInput,
-    captureWalletInput
+    captureWalletInput,
+    captureBuySettingsInput,
+    captureSellSettingsInput
 }
 
 module.exports = handleInput;

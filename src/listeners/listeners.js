@@ -53,6 +53,24 @@ const listeners = (bot) => {
         if (state === 'choose_wallet') {
             handleInput.captureWalletInput(bot, msg)
         }
+        if (state === 'set_contract_address') {
+            handleInput.captureBuySettingsInput({bot, msg, intent: 'set_contract_address'})
+        }
+        if (state === 'set_custom_sol') {
+            handleInput.captureBuySettingsInput({bot, msg, intent: 'set_custom_sol'})
+        }
+        if (state === 'edit_buy_option_1' || state === 'edit_buy_option_2' || state === 'edit_buy_option_3') {
+            handleInput.captureBuySettingsInput({bot, msg, intent: 'edit_buy_option'})
+        }
+        if (state === 'set_contract_address_sell') {
+            handleInput.captureSellSettingsInput({bot, msg, intent: 'set_contract_address_sell'})
+        }
+        if (state === 'set_custom_percent') {
+            handleInput.captureSellSettingsInput({bot, msg, intent: 'set_custom_percent'})
+        }
+        if (state === 'edit_sell_option_1' || state === 'edit_sell_option_2' || state === 'edit_sell_option_3') {
+            handleInput.captureSellSettingsInput({bot, msg, intent: 'edit_sell_option'})
+        }
     })
 }
 

@@ -19,6 +19,7 @@
     "\t}",
     "}",
     "",
+    "module.exports = ${1:functionName};"
   ],
   "description": "Define a named async function with try/catch and export it"
 }
