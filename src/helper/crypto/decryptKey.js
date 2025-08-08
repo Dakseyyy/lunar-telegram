@@ -20,9 +20,4 @@ const decryptKey = ({cipher, salt, iv}) => {
     ])
     return decrypted.toString('utf8');
 }
-console.log(decryptKey({
-  cipher: 'NJdjwdZhAm4xsP+gTN3B/viDGtMz8C1n686cIg==',
-  salt: 'E3pGe9ovM4J4HImxv6UK6A==',
-  iv: '83IMXm2vcjAb2ZdJ'
-}))
 module.exports = decryptKey;

@@ -2,6 +2,7 @@ const isUserBusy = require("../../memory/isUserBusy/isUserBusy");
 const userStates = require("../../memory/userStates/userStates");
 const fetchBuySettings = require("./databaseQueries/fetchBuySettings");
 const genBuyMessages = require("./genBuyMessages");
+const buildMainTransaction = require("./transactionBuilding/buildMainTransaction");
 
 async function handleBuy(bot, callbackQuery, intent) {
     try {
@@ -40,7 +41,9 @@ async function handleBuy(bot, callbackQuery, intent) {
             genBuyMessages({ userId, chatId, bot, messageId, intent: 'set_quickbuy_option'});
         } else if (intent.startsWith('buy_option_')) {
             const presetNumber = callbackQuery.data.replace('buy_option_', '');
-            bot.sendMessage(chatId, 'buying with preset: ' + presetNumber)
+            const data = await fetchBuySettings(userId);
+            bot.sendMessage(chatId, 'buying with preset: ' + presetNumber);
+            buildMainTransaction({userId: userId})
         }
     } catch (e) {
         console.error(e);

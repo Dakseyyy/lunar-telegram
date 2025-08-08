@@ -25,7 +25,6 @@ async function getUserWithdrawWallet(userId) {
 async function getUserPrivateKey(wallet) {
    try {
      const walletSecrets = (await dbClient.query('SELECT * FROM wallet_secrets WHERE wallet = $1', [wallet])).rows[0];
-     console.log(walletSecrets)
     const privateKey = decryptKey({...walletSecrets, cipher: walletSecrets.priv_key});
     const keypair = Keypair.fromSecretKey(bs58.decode(privateKey));
     return keypair;
