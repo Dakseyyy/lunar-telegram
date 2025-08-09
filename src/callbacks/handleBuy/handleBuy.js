@@ -43,7 +43,7 @@ async function handleBuy(bot, callbackQuery, intent) {
             const presetNumber = callbackQuery.data.replace('buy_option_', '');
             const data = await fetchBuySettings(userId);
             bot.sendMessage(chatId, 'buying with preset: ' + presetNumber);
-            buildMainTransaction({userId: userId})
+            buildMainTransaction({userId: userId, type: 'buy'})
         }
     } catch (e) {
         console.error(e);

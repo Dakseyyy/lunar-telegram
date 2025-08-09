@@ -1,5 +1,6 @@
 const isUserBusy = require("../../memory/isUserBusy/isUserBusy");
 const userStates = require("../../memory/userStates/userStates");
+const buildMainTransaction = require("../handleBuy/transactionBuilding/buildMainTransaction");
 const fetchSellSettings = require("./databaseQueries/fetchSellSettings");
 const genSellMessages = require("./genSellMessages");
 
@@ -41,6 +42,7 @@ async function handleSell(bot, callbackQuery, intent) {
         } else if (intent.startsWith('sell_option_')) {
             const presetNumber = callbackQuery.data.replace('sell_option_', '');
             bot.sendMessage(chatId, 'selling with preset: ' + presetNumber)
+             buildMainTransaction({userId: userId, type: 'sell'})
         }
     } catch (e) {
         console.error(e);

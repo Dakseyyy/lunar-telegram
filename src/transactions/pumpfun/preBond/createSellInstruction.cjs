@@ -1,5 +1,5 @@
 const pumpFun = require('@pump-fun/pump-sdk');
-const { bondingCurvePda, getBuyTokenAmountFromSolAmount } = require('@pump-fun/pump-sdk')
+const { bondingCurvePda, getSellSolAmountFromTokenAmount } = require('@pump-fun/pump-sdk')
 const { PublicKey, Transaction } = require('@solana/web3.js');
 const rpc = require('../../../clients/rpcClient');
 const { getAssociatedTokenAddressSync, createAssociatedTokenAccountIdempotentInstruction } = require('@solana/spl-token');
@@ -12,6 +12,7 @@ const {
     buyQuoteInputInternal,
     poolPda,
     pumpPoolAuthorityPda,
+    sellBaseInputInternal,
 } = require("@pump-fun/pump-swap-sdk")
 const sdk = new pumpFun.PumpSdk(rpc);
 const [pumpAmmSdk, pumpAmmInternalSdk] = [
@@ -29,7 +30,7 @@ function getPoolFromMint(mint) {
 
 
 
-async function createBuyInstruction({ mint, solAmount, userWallet }) {
+async function createSellInstruction({ mint, solAmount, userWallet }) {
     try {
         let start = Date.now();
         mint = new PublicKey(mint)
@@ -45,15 +46,25 @@ async function createBuyInstruction({ mint, solAmount, userWallet }) {
             ).catch(() => null)
 
         ])
+        const [bondingCurveAccountInfo, associatedUserAccountInfo] = accountInfos
+
+        
+        const tokenAmount = solAmount / (((bondingCurve.virtualSolReserves.toString()) / (bondingCurve.virtualTokenReserves.toString())) / 1000)
+        console.log(tokenAmount)
         if (bondingCurve.complete) {
 
             console.log('bondingCurveCompleted')
-            const slippage = 5
+            const slippage = 15
             const lpPool = (getPoolFromMint(mint)).pumpPoolPda
             console.log(lpPool.pumpPoolPda)
-
+            
             const { globalConfig, pool, poolBaseAmount, poolQuoteAmount } =
                 swapSolanaState;
+
+            const price = (poolQuoteAmount / 1e9) / (poolBaseAmount / 1e6)
+            console.log(price)
+            const tokensSelling = solAmount / price;
+            console.log(tokensSelling)
             const ata = getAssociatedTokenAddressSync(mint, new PublicKey(userWallet), true);
             const ataIx = createAssociatedTokenAccountIdempotentInstruction(
                 new PublicKey(userWallet),
@@ -62,8 +73,8 @@ async function createBuyInstruction({ mint, solAmount, userWallet }) {
                 mint
             );
 
-            const { base } = buyQuoteInputInternal(
-                new anchor.BN(solAmount * 1e9),
+            const { uiQuote } = sellBaseInputInternal(
+                new anchor.BN(tokensSelling * 1e9),
                 slippage,
                 poolBaseAmount,
                 poolQuoteAmount,
@@ -71,9 +82,9 @@ async function createBuyInstruction({ mint, solAmount, userWallet }) {
                 pool.creator
             );
 
-            const buyIxs = await pumpAmmInternalSdk.buyBaseInput(
+            const buyIxs = await pumpAmmInternalSdk.sellQuoteInput(
                 swapSolanaState,
-                base,
+                uiQuote,
                 slippage
             );
             let end = Date.now();
@@ -81,33 +92,34 @@ async function createBuyInstruction({ mint, solAmount, userWallet }) {
             return buyIxs;
         }
 
-        const [bondingCurveAccountInfo, associatedUserAccountInfo] = accountInfos
-        const amount = getBuyTokenAmountFromSolAmount(global, bondingCurve, new anchor.BN(solAmount * 1e9))
-
-        const ixns = await sdk.buyInstructions({
+       
+        const amount = getSellSolAmountFromTokenAmount(global, bondingCurve, new anchor.BN(tokenAmount * 1e6))
+        console.log(amount)
+        const ixns = await sdk.sellInstructions({
             global,
             bondingCurve,
             bondingCurveAccountInfo,
             associatedUserAccountInfo,
             mint: new PublicKey(mint),
             user: new PublicKey(userWallet),
-            solAmount: new anchor.BN(solAmount * 1e9),
-            amount: new anchor.BN(amount),
-            slippage: 0.01
+            solAmount: new anchor.BN(amount / 1e9),
+            amount: new anchor.BN(tokenAmount * 1e6),
+            slippage: 25
         });
 
         const tx = new Transaction().add(...ixns);
         let end = Date.now();
         console.log(`Time to fetch all relevant data: ${(end - start).toFixed(2)}`)
+       console.log(amount.toString() / 1e9)
         return ixns;
     } catch (e) {
-       
+        console.error('Error:', e);
     }
 }
 
-createBuyInstruction({
-    mint: 'BrsunMbcxxs34NZw57hLCHU7sNHeWRAKAmKcHqXCpump',
+createSellInstruction({
+    mint: '28nZw85zRErS1i48fmnHJXk9hqLd1NDungWTXuYepump',
     userWallet: 'FSQ61ZS1UTx5Poo1PFEjj54L1A4dbBEPLhQQTWDdae1G',
     solAmount: 0.01,
 });
-module.exports = createBuyInstruction;
+module.exports = createSellInstruction;

@@ -11,11 +11,17 @@ const setComputeUnitPriceInstruction = require("./computeBudget/setComputeUnitPr
 const { getuserWallet, getUserPrivateKey } = require("../../../helper/withdraw/walletServices");
 const sendRawTxn = require("../../../helper/withdraw/sendRawTxn");
 const createBuyInstruction = require("../../../transactions/pumpfun/preBond/createBuyInstruction.cjs");
-
-async function buildMainTransaction({ userId, mint, solAmount }) {
+const {
+    PumpAmmSdk,
+    PumpAmmInternalSdk,
+    buyQuoteInputInternal,
+} = require("@pump-fun/pump-swap-sdk");
+const createSellInstruction = require("../../../transactions/pumpfun/preBond/createSellInstruction.cjs");
+async function buildMainTransaction({ userId, mint, solAmount, type }) {
     try {
         const userWallet = await getuserWallet(userId);
-        const userWalletPubkey = new PublicKey(userWallet)
+        const userWalletPubkey = new PublicKey(userWallet);
+        let mainInstruction;
         const walletSecret = await getUserPrivateKey(userWallet);
         const { blockhash, lastValidBlockHeight } = await rpc.getLatestBlockhash('finalized');
         const transaction = new Transaction({
@@ -26,14 +32,27 @@ async function buildMainTransaction({ userId, mint, solAmount }) {
 
         transaction.add(setComputeLimitInstruction());
         transaction.add(setComputeUnitPriceInstruction());
-        const preBondBuyPumpFun = await createBuyInstruction({
-        mint: 'BrsunMbcxxs34NZw57hLCHU7sNHeWRAKAmKcHqXCpump',
-        userWallet: 'FSQ61ZS1UTx5Poo1PFEjj54L1A4dbBEPLhQQTWDdae1G',
-        solAmount: 0.01,
-    })
-        transaction.add(...preBondBuyPumpFun);
+        if (type === 'buy') {
+            mainInstruction = await createBuyInstruction({
+                mint: 'BrsunMbcxxs34NZw57hLCHU7sNHeWRAKAmKcHqXCpump',
+                userWallet: 'FSQ61ZS1UTx5Poo1PFEjj54L1A4dbBEPLhQQTWDdae1G',
+                solAmount: 0.001,
+            })
+        } else if (type === 'sell') {
+            mainInstruction = await createSellInstruction({
+            mint: 'BrsunMbcxxs34NZw57hLCHU7sNHeWRAKAmKcHqXCpump',
+            userWallet: 'FSQ61ZS1UTx5Poo1PFEjj54L1A4dbBEPLhQQTWDdae1G',
+            solAmount: 0.001,
+        })
+
+        }
+
+        transaction.add(...mainInstruction);
         const signature = transaction.sign(walletSecret)
-        const txid = await sendRawTxn(transaction);
+
+        const txid = await rpc.sendRawTransaction(transaction.serialize(), {
+            skipPreflight: false
+        });
 
         console.log(`Transaction sent! TXID: ${txid}`);
         const confirmation = await rpc.confirmTransaction({
@@ -41,10 +60,19 @@ async function buildMainTransaction({ userId, mint, solAmount }) {
             blockhash,
             lastValidBlockHeight
         });
-        
-        console.log('Transaction done')
+        console.log('Transaction confirmed!')
+        if (confirmation?.value?.err?.InstructionError[1]?.Custom) {
+            if (confirmation?.value?.err?.InstructionError[1]?.Custom === 1) {
+                console.log('Not enough sol')
+            } else if (confirmation?.value?.err?.InstructionError[1]?.Custom === 6003) {
+                console.log('Slippage exceeded.')
+            }
+           
+            return;
+        }
+
     } catch (e) {
-        console.error(e);
+       
     }
 }
 
