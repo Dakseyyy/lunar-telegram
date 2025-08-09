@@ -51,7 +51,7 @@ async function buildMainTransaction({ userId, mint, solAmount, type }) {
         const signature = transaction.sign(walletSecret)
 
         const txid = await rpc.sendRawTransaction(transaction.serialize(), {
-            skipPreflight: false
+            skipPreflight: true
         });
 
         console.log(`Transaction sent! TXID: ${txid}`);
