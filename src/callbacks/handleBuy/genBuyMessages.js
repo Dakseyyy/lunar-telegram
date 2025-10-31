@@ -11,7 +11,7 @@ async function genBuyMessages({ intent, bot, data, messageId, chatId }) {
                 reply_markup: {
                     inline_keyboard: [
                         [{ text: `Contract Address: ${data.contract_address === null ? '⸺': shortenCA(data.contract_address)}`, callback_data: 'set_contract_address' }],
-                        [{ text: `${data.buy_option_1} SOL`, callback_data: 'buy_option_1' }, { text: `${data.buy_option_2} SOL`, callback_data: 'buy_option_2' }, { text: `${data.buy_option_3} SOL`, callback_data: 'buy_option_3' },],
+                        [{ text: `${data.buy_option_1} SOL`, callback_data: 'buy_option_1' }, { text: `${data.buy_option_2} SOL`, callback_data: 'buy_option_2' }, { text: `${data.buy_option_3} SOL`, callback_data: 'buy_option_3' },{ text: `${data.buy_option_4} SOL`, callback_data: 'buy_option_4' }],
                         [{ text: `x SOL`, callback_data: 'set_custom_sol' }],
                         [{ text: '⟵ Back', callback_data: 'back_to_start' }, { text: `✏️ Edit Buy Options`, callback_data: 'edit_buy_options' }]
                     ]
@@ -61,7 +61,7 @@ async function genBuyMessages({ intent, bot, data, messageId, chatId }) {
                 disable_web_page_preview: true,
                 reply_markup: {
                     inline_keyboard: [
-                        [{ text: `✏️ ${data.buy_option_1} SOL`, callback_data: 'edit_buy_option_1' }, { text: `✏️ ${data.buy_option_2} SOL`, callback_data: 'edit_buy_option_2' }, { text: `✏️ ${data.buy_option_3} SOL`, callback_data: 'edit_buy_option_3' },],
+                        [{ text: `✏️ ${data.buy_option_1} SOL`, callback_data: 'edit_buy_option_1' }, { text: `✏️ ${data.buy_option_2} SOL`, callback_data: 'edit_buy_option_2' }, { text: `✏️ ${data.buy_option_3} SOL`, callback_data: 'edit_buy_option_3' },{ text: `✏️ ${data.buy_option_4} SOL`, callback_data: 'edit_buy_option_4' }],
                         [{ text: '⟵ Back', callback_data: 'buy' }]
                     ]
                 }
@@ -93,7 +93,7 @@ async function genBuyMessages({ intent, bot, data, messageId, chatId }) {
                 reply_markup: {
                     inline_keyboard: [
                         [{ text: `Contract Address: ${data.contract_address === null ? '⸺': shortenCA(data.contract_address)}`, callback_data: 'set_contract_address' }],
-                        [{ text: `${data.buy_option_1} SOL`, callback_data: 'buy_option_1' }, { text: `${data.buy_option_2} SOL`, callback_data: 'buy_option_2' }, { text: `${data.buy_option_3} SOL`, callback_data: 'buy_option_3' },],
+                        [{ text: `${data.buy_option_1} SOL`, callback_data: 'buy_option_1' }, { text: `${data.buy_option_2} SOL`, callback_data: 'buy_option_2' }, { text: `${data.buy_option_3} SOL`, callback_data: 'buy_option_3' },{ text: `${data.buy_option_4} SOL`, callback_data: 'buy_option_4' }],
                         [{ text: `x SOL`, callback_data: 'set_custom_sol' }],
                         [{ text: '⟵ Back', callback_data: 'back_to_start' }, { text: `✏️ Edit Buy Options`, callback_data: 'edit_buy_options' }]
                     ]
@@ -138,7 +138,7 @@ async function genBuyMessages({ intent, bot, data, messageId, chatId }) {
                 disable_web_page_preview: true,
                 reply_markup: {
                     inline_keyboard: [
-                        [{ text: `✏️ ${data.buy_option_1} SOL`, callback_data: 'edit_buy_option_1' }, { text: `✏️ ${data.buy_option_2} SOL`, callback_data: 'edit_buy_option_2' }, { text: `✏️ ${data.buy_option_3} SOL`, callback_data: 'edit_buy_option_3' },],
+                        [{ text: `✏️ ${data.buy_option_1} SOL`, callback_data: 'edit_buy_option_1' }, { text: `✏️ ${data.buy_option_2} SOL`, callback_data: 'edit_buy_option_2' }, { text: `✏️ ${data.buy_option_3} SOL`, callback_data: 'edit_buy_option_3' },{ text: `✏️ ${data.buy_option_4} SOL`, callback_data: 'edit_buy_option_4' }],
                         [{ text: '⟵ Back', callback_data: 'buy' }]
                     ]
                 }

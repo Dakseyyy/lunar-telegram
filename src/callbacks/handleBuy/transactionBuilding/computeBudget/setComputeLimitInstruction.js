@@ -4,7 +4,7 @@ function setComputeLimitInstruction() {
     try {
 
         const setComputeUnitLimitInstruction = ComputeBudgetProgram.setComputeUnitLimit({
-            units: 150000
+            units: 200000
         });
 
         return setComputeUnitLimitInstruction;

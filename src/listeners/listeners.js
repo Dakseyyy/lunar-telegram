@@ -43,7 +43,7 @@ const listeners = (bot) => {
         if (state === 'update_referral_code'){
             handleInput.handleReferralCodeInput(bot, msg)
         }
-        if (state === 'priority_fee_buy' || state === 'priority_fee_sell' || state === 'bribe_fee_buys' || state === 'bribe_fee_sells' || state === 'slippage' || state === 'copytrade_wallet' || state === 'buy_amount' || state === 'toggle_active') {
+        if (state === 'priority_fee_buy' || state === 'priority_fee_sell' || state === 'bribe_fee_buys' || state === 'bribe_fee_sells' || state === 'slippage_copytrade' || state === 'copytrade_wallet' || state === 'buy_amount' || state === 'toggle_active') {
 
             handleInput.captureCopytradeInput(bot, msg, state)
         }
@@ -59,7 +59,7 @@ const listeners = (bot) => {
         if (state === 'set_custom_sol') {
             handleInput.captureBuySettingsInput({bot, msg, intent: 'set_custom_sol'})
         }
-        if (state === 'edit_buy_option_1' || state === 'edit_buy_option_2' || state === 'edit_buy_option_3') {
+        if (state === 'edit_buy_option_1' || state === 'edit_buy_option_2' || state === 'edit_buy_option_3' || state === 'edit_buy_option_4') {
             handleInput.captureBuySettingsInput({bot, msg, intent: 'edit_buy_option'})
         }
         if (state === 'set_contract_address_sell') {
@@ -68,7 +68,7 @@ const listeners = (bot) => {
         if (state === 'set_custom_percent') {
             handleInput.captureSellSettingsInput({bot, msg, intent: 'set_custom_percent'})
         }
-        if (state === 'edit_sell_option_1' || state === 'edit_sell_option_2' || state === 'edit_sell_option_3') {
+        if (state === 'edit_sell_option_1' || state === 'edit_sell_option_2' || state === 'edit_sell_option_3' || state === 'edit_sell_option_4') {
             handleInput.captureSellSettingsInput({bot, msg, intent: 'edit_sell_option'})
         }
     })

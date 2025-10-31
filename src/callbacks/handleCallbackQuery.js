@@ -19,6 +19,9 @@ const handleScheduledWithdraws = require('./handleScheduledWithdraws/handleSched
 const cancelWithdraw = require('./handleScheduledWithdraws/cancelWithdraw');
 const handleBuy = require('./handleBuy/handleBuy');
 const handleSell = require('./handleSell/handleSell');
+const handlePositionUpdate = require('./handleSell/handlePositionUpdate');
+const handleRewards = require('./handleRewards/handleRewards');
+const claimReferral = require('../commands/handlers/referrals/claimReferral/claimReferral');
 solPriceFetcher()
 
 const handleCallbackQuery = async (bot, callbackQuery) => {
@@ -125,7 +128,7 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         bot.answerCallbackQuery(callbackQuery.id);
     }
     if (data === 'positions') {
-        await positionsCommand(bot, callbackQuery);
+        await positionsCommand(bot, callbackQuery, 0);
         bot.answerCallbackQuery(callbackQuery.id);
     }
     if (data === 'copytrade') {
@@ -231,7 +234,28 @@ const handleCallbackQuery = async (bot, callbackQuery) => {
         handleSell(bot, callbackQuery, callbackQuery.data);
         bot.answerCallbackQuery(callbackQuery.id);
     }
-    
+    if (data.startsWith('positions_')) {
+        await positionsCommand(bot, callbackQuery, 0);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data.startsWith('position_id_')) {
+        console.log('clicked')
+        await handlePositionUpdate(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data.startsWith('rewards')) {
+        await handleRewards(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data.startsWith('claim_rewards')) {
+        await handleRewards(bot, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+    if (data.startsWith('claim_referral_sol')) {
+        await claimReferral(userId, bot, chatId, callbackQuery);
+        bot.answerCallbackQuery(callbackQuery.id);
+    }
+
 }
 
 module.exports = handleCallbackQuery;
